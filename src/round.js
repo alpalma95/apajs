@@ -1,18 +1,15 @@
-import { diffAsync } from "./diff";
-import { buildDOM, html } from "./round-html";
-import { appendDOM } from "./utils";
-import { unregisterEvents } from "./eventsManager";
+import { createApp } from "petite-vue";
 
 export class ReactiveWC extends HTMLElement {
   constructor() {
     super();
-    this._componentDidRender = false;
   }
   connectedCallback() {
     this.firstRender();
-
+    this.setAttribute("v-scope", "");
     this.getProps();
     this.onInit();
+    createApp({ ...this.ctx }).mount(this);
   }
   attributeChangedCallback(name, oldValue, newValue) {
     name.startsWith(":")
@@ -29,19 +26,10 @@ export class ReactiveWC extends HTMLElement {
   }
   firstRender() {
     const root = this.shadowRoot ? this.shadowRoot : this;
-
-    const innerHTML = buildDOM(this.render());
-    appendDOM(root, innerHTML);
+    root.innerHTML = this.ctx.render();
     this._componentDidRender = true;
   }
-  async update() {
-    if (!this._componentDidRender) return;
-    unregisterEvents(this);
-
-    const vdom = buildDOM(this.render());
-    const dom = this.shadowRoot ? this.shadowRoot : this;
-    await diffAsync(vdom, dom);
-  }
+  async update() {}
 
   getProps() {
     this.getAttributeNames().forEach((attr) => {
@@ -50,26 +38,6 @@ export class ReactiveWC extends HTMLElement {
     });
   }
 
-  defineState(object) {
-    if (object === null || typeof object !== "object") {
-      return object;
-    }
-    for (const property in object) {
-      object[property] = this.defineState(object[property]);
-    }
-    return new Proxy(object, {
-      get(target, property) {
-        return target[property];
-      },
-      set: (target, property, value) => {
-        if (target[property] !== value) {
-          target[property] = value;
-          this.update();
-        }
-        return true;
-      },
-    });
-  }
   /**
    *
    * @param {string} name Name of the attribute that is triggering the change callback
