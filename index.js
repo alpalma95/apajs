@@ -34,8 +34,8 @@ defineComponent(
     // all the properties that we're defining above
     render: ({ count, inc, props, double }) => html`<div>
       <!-- This is how we access props from template, if we don't want them to be reactive -->
-      <h2>Count started at: ${props.initial_count} and double is: ${double}</h2>
-      <div class="red">Count is: ${count}</div>
+      <h2>Count started at: ${props.initial_count}</h2>
+      <div class="red">Count is: ${count} and double is: ${double}</div>
       <button @click="${() => inc(3)}">++</button>
 
       <!-- Of course, we can use other custom elements in here! -->
