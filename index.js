@@ -1,50 +1,35 @@
-import { ReactiveWC } from "./src/round";
-import { createApp } from "petite-vue";
-class Test extends ReactiveWC {
-  constructor() {
-    super();
-  }
+import { defineComponent } from "./src/round";
+import { html } from "./src";
+import { ref } from "./src";
 
-  onInit() {
-    this.count = 0;
-
-    this.inc = (num) => {
-      this.count += num;
-      console.log("workin'");
-    };
-  }
-
-  render() {
-    return /*html*/ `
-    <div>
-      <div>{{ count }}</div>
-      <button @click="()=>inc()">++</button>
-    </div>`;
-  }
-}
-
-window.customElements.define("test-test", Test);
-
-const defineComponent = (tagName, ctx) => {
-  window.customElements.define(
-    tagName,
-    class extends ReactiveWC {
-      constructor() {
-        super();
-        this.ctx = ctx;
-      }
-    }
-  );
-};
+defineComponent("test-test", {
+  count: 0,
+  items: [
+    { id: 1, text: "Item 1" },
+    { id: 2, text: "Item 2" },
+  ],
+  render: ({ count, items }) => html`<div>
+    <h1>Test works! ${count}</h1>
+    <ul>
+      ${items.map((it) => html`<li>Item ${it.id}: ${it.text}</li>`)}
+    </ul>
+  </div>`,
+});
 
 defineComponent("bla-bla", {
-  count: 0,
+  count: ref(0),
   inc(num) {
-    this.count += num;
+    this.count.val += num;
   },
-  render: () => /*html*/ `
-  <div>
-    <div>{{ count }}</div>
-    <button @click="inc(3)">++</button>
+  onInit() {
+    console.log("Hi from on init");
+    setInterval(() => {
+      this.inc(4);
+    }, 1000);
+  },
+  render: ({ count, inc }) => html` <div>
+    <div>${count}</div>
+    <button @click="${() => inc(3)}">++</button>
+    <test-test></test-test>
   </div>`,
 });
