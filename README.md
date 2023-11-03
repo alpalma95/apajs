@@ -1,6 +1,6 @@
 # RoundJS
 
-<sub><sup>... Because it's a minimal and bad substitute for Angular.</sup></sub>
+<sub>... Because it's a minimal and bad substitute for Angular.</sub>
 
 ---
 
