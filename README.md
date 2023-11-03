@@ -8,11 +8,11 @@
 
 I left the subtitle under the name of the library because I think it's funny (and also as a kind of reminder of how everything started).
 
-This started just for fun, wanted to experiment around with web components and try to build something from scratch.
+This started just for fun, I wanted to experiment around with web components and try to build something from scratch.
 
 Nonetheless, as it turns out, I felt proud of my work and wanted to share it with the world as a "real" project.
 
-I stated in the first version (one could say "alpha.0.0.0.0.0.0.1", you can still check the repository [here](https://github.com/alpalma95/roundjs-legacy)) that this shouldn't be used for production and "Why would you even want another library".
+In the legacy version (one could say "alpha.0.0.0.0.0.0.1", you can still check the repository [here](https://github.com/alpalma95/roundjs-legacy)) I stated that this shouldn't be used for production and "Why would you even want another library".
 
 Well, I can come up with some reasons why I'll keep on working on it and I'm planning to use it:
 
