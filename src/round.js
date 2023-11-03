@@ -1,13 +1,9 @@
-const transformTextNodes = (arr) => {
+let transformTextNodes = (arr) => {
   if (!Array.isArray(arr)) {
     return typeof arr === "string" ? document.createTextNode(arr) : arr;
   }
-  const final = arr.map((el) => {
-    if (typeof el == "string") {
-      return document.createTextNode(el);
-    } else {
-      return el;
-    }
+  let final = arr.map((el) => {
+    return typeof el == "string" ? document.createTextNode(el) : el;
   });
   return final;
 };
@@ -17,61 +13,43 @@ export class ReactiveWC extends HTMLElement {
     super();
   }
   connectedCallback() {
-    this.firstRender();
     this.getProps();
+    this.firstRender();
     this.onInit();
   }
-  attributeChangedCallback(name, oldValue, newValue) {
-    name.startsWith(":")
-      ? (this[name.slice(1)] = newValue)
-      : (this[name] = newValue);
-    this.watchAttributes(
-      name.slice(1),
-      JSON.parse(newValue),
-      JSON.parse(oldValue)
-    );
+  attributeChangedCallback(n, ov, nv) {
+    n.startsWith(":") ? (this[n.slice(1)] = nv) : (this[n] = nv);
+    this.watch(n.slice(1), JSON.parse(ov), JSON.parse(nv));
   }
   disconnectedCallback() {
     this.onDestroy();
   }
   firstRender() {
-    const root = this.shadowRoot ? this.shadowRoot : this;
-    const content = transformTextNodes(this.ctx.render(this.ctx));
+    let root = this.shadowRoot ? this.shadowRoot : this;
+    let content = transformTextNodes(this.ctx.render(this.ctx));
 
     if (Array.isArray(content)) {
       content.forEach((el) => root.appendChild(el));
     } else {
       root.appendChild(content);
     }
-    this._componentDidRender = true;
   }
-  async update() {}
-
   getProps() {
     this.getAttributeNames().forEach((attr) => {
       if (!attr.startsWith(":")) return;
-      this[attr.slice(1)] = JSON.parse(this.getAttribute(attr));
+      let temp = {};
+      temp[attr.slice(1)] = JSON.parse(this.getAttribute(attr));
+      !this.ctx ? (this.props = temp) : (this.ctx["props"] = temp);
     });
   }
-
-  /**
-   *
-   * @param {string} name Name of the attribute that is triggering the change callback
-   * @param {any} oldValue Old value previous to the change
-   * @param {any} newValue Value after the change
-   */
-  watchAttributes(name, oldValue, newValue) {}
-  onInit() {
-    if (this.ctx && typeof this.ctx["onInit"] === "function") {
-      this.ctx?.onInit();
-    }
-  }
+  watch(n, ov, nv) {}
+  onInit() {}
   onDestroy() {}
   render() {}
 }
 
-const bindScopes = (ctx) => {
-  for (const key of Object.keys(ctx)) {
+let bindScopes = (ctx) => {
+  for (let key of Object.keys(ctx)) {
     if (typeof ctx[key] === "function") {
       ctx[key] = ctx[key].bind(ctx);
     }
@@ -79,13 +57,31 @@ const bindScopes = (ctx) => {
   return ctx;
 };
 
-export const defineComponent = (tagName, ctx) => {
+export let defineComponent = (tagName, ctx, options = {}) => {
   window.customElements.define(
     tagName,
     class extends ReactiveWC {
       constructor() {
         super();
         this.ctx = bindScopes(ctx);
+        if (options.shadow) {
+          this.attachShadow({ mode: options.shadow });
+        }
+      }
+      onInit() {
+        if (this.ctx && typeof this.ctx["onInit"] === "function") {
+          this.ctx.onInit();
+        }
+      }
+      onDestroy() {
+        if (this.ctx && typeof this.ctx["onDestroy"] === "function") {
+          this.ctx.onDestroy();
+        }
+      }
+      watch(n, ov, nv) {
+        if (this.ctx && typeof this.ctx["watch"] === "function") {
+          this.ctx.watch(n, ov, nv);
+        }
       }
     }
   );
