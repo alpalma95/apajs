@@ -18,7 +18,7 @@ Well, I can come up with some reasons why I'll keep on working on it and I'm pla
 
 ### Web components for everyone
 
-It provides a very nice and intuitive wrapper over web components. You can take either a class-based approach (by extending from `ReactiveWC`) or a functional component (by using the `defineComponent` function). At the moment, you can find an example of the functional one on the `index.js` at the root of the project.
+It provides a very nice and intuitive wrapper over web components. You can take either a class-based approach (by extending from `ReactiveWC`) or a functional one (by using the `defineComponent` function). At the moment, you can find an example of the functional one on the `index.js` at the root of the project.
 
 I believe that we should empower web standards whenever the requirements of our projects allow us to do so. Maybe, (and maybe I'm as well being too _naïf_), a project like this one could make someone reconsider before reaching out to a framework of a +40kb library. I mean, reusable components, encapsulated logic and (optionally) styles and reactivity out of the box. And all based on the standards of modern JavaScript<sup>1</sup>. You know JavaScript, you can still use everything you know with RoundJS.
 
