@@ -64,23 +64,24 @@ export let defineComponent = (tagName, ctx, options = {}) => {
       constructor() {
         super();
         this.ctx = bindScopes(ctx);
+        this.ctx["getHost"] = () => this;
         if (options.shadow) {
           this.attachShadow({ mode: options.shadow });
         }
       }
       onInit() {
         if (this.ctx && typeof this.ctx["onInit"] === "function") {
-          this.ctx.onInit();
+          this.ctx.onInit(this);
         }
       }
       onDestroy() {
         if (this.ctx && typeof this.ctx["onDestroy"] === "function") {
-          this.ctx.onDestroy();
+          this.ctx.onDestroy(this);
         }
       }
       watch(n, ov, nv) {
         if (this.ctx && typeof this.ctx["watch"] === "function") {
-          this.ctx.watch(n, ov, nv);
+          this.ctx.watch(n, ov, nv, this);
         }
       }
     }
