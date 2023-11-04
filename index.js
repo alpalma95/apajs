@@ -1,4 +1,4 @@
-import { defineComponent } from "./src/round";
+import { defineComponent } from "./src/apa";
 import { derive, html } from "./src";
 import { state } from "./src";
 import { reactive } from "./src/reactive";
@@ -48,7 +48,7 @@ defineComponent(
 
 defineComponent("custom-2", {
   // VanX (addon) offers a reactive function that does the same. However, for the scope of
-  // RoundJS, I believe it'd be an overkill, since it implies other helpers. I decided
+  // ApaJS, I believe it'd be an overkill, since it implies other helpers. I decided
   // to go with my own lightweight version, based on Van state
   state: reactive({ count: 0 }),
   items: [

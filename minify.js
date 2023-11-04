@@ -21,8 +21,8 @@ const config = {
   },
   module: true,
   sourceMap: {
-    filename: "roundjs.min.js",
-    url: "roundjs.min.js.map",
+    filename: "apa.min.js",
+    url: "apa.min.js.map",
   },
   output: {
     comments: "some",
@@ -30,12 +30,12 @@ const config = {
 };
 
 const doMinify = async () => {
-  const code = fs.readFileSync("./dist/roundjs.es.js", "utf8");
+  const code = fs.readFileSync("./dist/apa.es.js", "utf8");
 
   const minified = await minify(code, config);
 
-  fs.writeFileSync("./dist/roundjs.es.min.js", minified.code);
+  fs.writeFileSync("./dist/apa.es.min.js", minified.code);
 
-  fs.writeFileSync("./dist/roundjs.min.js.map", minified.map);
+  fs.writeFileSync("./dist/apa.min.js.map", minified.map);
 };
 doMinify();

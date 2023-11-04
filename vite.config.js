@@ -7,8 +7,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: "src/index.js",
-      name: "roundjs",
-      fileName: (format) => `roundjs.${format}.js`,
+      name: "apajs",
+      fileName: (format) => `apa.${format}.js`,
     },
   },
 });

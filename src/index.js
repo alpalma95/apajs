@@ -1,5 +1,5 @@
-import { ReactiveWC, defineComponent } from "./round";
-import { html } from "./round-html";
+import { ReactiveWC, defineComponent } from "./apa";
+import { html } from "./apa-html";
 import { reactive } from "./reactive";
 import van from "vanjs-core";
 
