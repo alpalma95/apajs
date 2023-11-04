@@ -1,6 +1,7 @@
 import { defineComponent } from "./src/round";
 import { derive, html } from "./src";
 import { state } from "./src";
+import { reactive } from "./src/reactive";
 
 defineComponent(
   "custom-1",
@@ -36,7 +37,7 @@ defineComponent(
       <!-- This is how we access props from template, if we don't want them to be reactive -->
       <h2>Count started at: ${props.initial_count}</h2>
       <div class="red">Count is: ${count} and double is: ${double}</div>
-      <button @click="${() => inc(3)}">++</button>
+      <button onclick="${() => inc(3)}">++</button>
 
       <!-- Of course, we can use other custom elements in here! -->
       <custom-2></custom-2>
@@ -46,15 +47,20 @@ defineComponent(
 );
 
 defineComponent("custom-2", {
-  count: 0,
+  state: reactive({ count: 0 }),
   items: [
     { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
   ],
-  render: ({ count, items }) => html`<div>
-    <h1>Test works! ${count}</h1>
+  onInit() {
+    console.log(this.count);
+  },
+  render: ({ state, items }) => html`<div>
+    <h1>Test works! ${state.count}</h1>
     <ul>
       ${items.map((it) => html`<li>Item ${it.id}: ${it.text}</li>`)}
     </ul>
+
+    <button onclick="${() => state.count.val++}">Inc reactive</button>
   </div>`,
 });
