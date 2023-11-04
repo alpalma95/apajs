@@ -36,6 +36,6 @@ const doMinify = async () => {
 
   fs.writeFileSync("./dist/roundjs.es.min.js", minified.code);
 
-  fs.writeFileSync("roundjs.min.js.map", minified.map);
+  fs.writeFileSync("./dist/roundjs.min.js.map", minified.map);
 };
 doMinify();

@@ -1,30 +1,30 @@
-let J = (e) => Array.isArray(e) ? e.map((s) => typeof s == "string" ? document.createTextNode(s) : s) : typeof e == "string" ? document.createTextNode(e) : e;
-class M extends HTMLElement {
+let { isArray: P } = Array, R = (t) => P(t) ? t.map(
+  (e) => typeof e == "string" ? document.createTextNode(e) : e
+) : typeof t == "string" ? document.createTextNode(t) : t;
+class $ extends HTMLElement {
   constructor() {
     super();
   }
   connectedCallback() {
-    this.getProps(), this.firstRender(), this.onInit();
+    this.getProps();
+    let e = this.shadowRoot ? this.shadowRoot : this, s = R(this.ctx.render(this.ctx) ?? this.render());
+    P(s) ? s.forEach((n) => e.appendChild(n)) : e.appendChild(s), this.onInit();
   }
-  attributeChangedCallback(t, s, o) {
-    t.startsWith(":") ? this[t.slice(1)] = o : this[t] = o, this.watch(t.slice(1), JSON.parse(s), JSON.parse(o));
+  attributeChangedCallback(e, s, n) {
+    e.startsWith(":") ? this[e.slice(1)] = n : this[e] = n, this.watch(e.slice(1), JSON.parse(s), JSON.parse(n));
   }
   disconnectedCallback() {
     this.onDestroy();
   }
-  firstRender() {
-    let t = this.shadowRoot ? this.shadowRoot : this, s = J(this.ctx.render(this.ctx));
-    Array.isArray(s) ? s.forEach((o) => t.appendChild(o)) : t.appendChild(s);
-  }
   getProps() {
-    this.getAttributeNames().forEach((t) => {
-      if (!t.startsWith(":"))
+    this.getAttributeNames().forEach((e) => {
+      if (!e.startsWith(":"))
         return;
       let s = {};
-      s[t.slice(1)] = JSON.parse(this.getAttribute(t)), this.ctx ? this.ctx.props = s : this.props = s;
+      s[e.slice(1)] = JSON.parse(this.getAttribute(e)), this.ctx ? this.ctx.props = s : this.props = s;
     });
   }
-  watch(t, s, o) {
+  watch(e, s, n) {
   }
   onInit() {
   }
@@ -33,133 +33,131 @@ class M extends HTMLElement {
   render() {
   }
 }
-let j = (e) => {
-  for (let t of Object.keys(e))
-    typeof e[t] == "function" && (e[t] = e[t].bind(e));
-  return e;
-}, Y = (e, t, s = {}) => {
+let B = (t) => {
+  for (let e of Object.keys(t))
+    typeof t[e] == "function" && (t[e] = t[e].bind(t));
+  return t;
+}, se = (t, e, s = {}) => {
   window.customElements.define(
-    e,
-    class extends M {
+    t,
+    class extends $ {
       constructor() {
-        super(), this.ctx = j(t), this.ctx.getHost = () => this, s.shadow && this.attachShadow({ mode: s.shadow });
+        super(), this.ctx = B(e), this.ctx.getHost = () => this, s.shadow && this.attachShadow({ mode: s.shadow });
       }
       onInit() {
-        this.ctx && typeof this.ctx.onInit == "function" && this.ctx.onInit(this);
+        this.ctx.onInit && this.ctx.onInit(this);
       }
       onDestroy() {
-        this.ctx && typeof this.ctx.onDestroy == "function" && this.ctx.onDestroy(this);
+        this.ctx.onDestroy && this.ctx.onDestroy(this);
       }
-      watch(o, n, i) {
-        this.ctx && typeof this.ctx.watch == "function" && this.ctx.watch(o, n, i, this);
+      watch(n, o, i) {
+        this.ctx.watch && this.ctx.watch(n, o, i, this);
       }
     }
   );
 };
-function z(e) {
-  for (var t, s, o = arguments, n = 1, i = "", a = "", l = [0], d = function(r) {
-    n === 1 && (r || (i = i.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? l.push(r ? o[r] : i) : n === 3 && (r || i) ? (l[1] = r ? o[r] : i, n = 2) : n === 2 && i === "..." && r ? l[2] = Object.assign(l[2] || {}, o[r]) : n === 2 && i && !r ? (l[2] = l[2] || {})[i] = !0 : n >= 5 && (n === 5 ? ((l[2] = l[2] || {})[s] = r ? i ? i + o[r] : o[r] : i, n = 6) : (r || i) && (l[2][s] += r ? i + o[r] : i)), i = "";
-  }, c = 0; c < e.length; c++) {
-    c && (n === 1 && d(), d(c));
-    for (var p = 0; p < e[c].length; p++)
-      t = e[c][p], n === 1 ? t === "<" ? (d(), l = [l, "", null], n = 3) : i += t : n === 4 ? i === "--" && t === ">" ? (n = 1, i = "") : i = t + i[0] : a ? t === a ? a = "" : i += t : t === '"' || t === "'" ? a = t : t === ">" ? (d(), n = 1) : n && (t === "=" ? (n = 5, s = i, i = "") : t === "/" && (n < 5 || e[c][p + 1] === ">") ? (d(), n === 3 && (l = l[0]), n = l, (l = l[0]).push(this.apply(null, n.slice(1))), n = 0) : t === " " || t === "	" || t === `
-` || t === "\r" ? (d(), n = 2) : i += t), n === 3 && i === "!--" && (n = 4, l = l[0]);
+function G(t) {
+  for (var e, s, n = arguments, o = 1, i = "", a = "", l = [0], d = function(r) {
+    o === 1 && (r || (i = i.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? l.push(r ? n[r] : i) : o === 3 && (r || i) ? (l[1] = r ? n[r] : i, o = 2) : o === 2 && i === "..." && r ? l[2] = Object.assign(l[2] || {}, n[r]) : o === 2 && i && !r ? (l[2] = l[2] || {})[i] = !0 : o >= 5 && (o === 5 ? ((l[2] = l[2] || {})[s] = r ? i ? i + n[r] : n[r] : i, o = 6) : (r || i) && (l[2][s] += r ? i + n[r] : i)), i = "";
+  }, c = 0; c < t.length; c++) {
+    c && (o === 1 && d(), d(c));
+    for (var p = 0; p < t[c].length; p++)
+      e = t[c][p], o === 1 ? e === "<" ? (d(), l = [l, "", null], o = 3) : i += e : o === 4 ? i === "--" && e === ">" ? (o = 1, i = "") : i = e + i[0] : a ? e === a ? a = "" : i += e : e === '"' || e === "'" ? a = e : e === ">" ? (d(), o = 1) : o && (e === "=" ? (o = 5, s = i, i = "") : e === "/" && (o < 5 || t[c][p + 1] === ">") ? (d(), o === 3 && (l = l[0]), o = l, (l = l[0]).push(this.apply(null, o.slice(1))), o = 0) : e === " " || e === "	" || e === `
+` || e === "\r" ? (d(), o = 2) : i += e), o === 3 && i === "!--" && (o = 4, l = l[0]);
   }
   return d(), l.length > 2 ? l.slice(1) : l[1];
 }
-let S = Object, _, f = S.getPrototypeOf, C = document, b, h, u, k = { isConnected: 1 }, B = 1e3, y, P = {}, G = f(k), N = f(f), T = (e, t, s, o) => (e ?? (setTimeout(s, o), /* @__PURE__ */ new Set())).add(t), V = (e, t, s) => {
-  let o = h;
-  h = t;
+let C = Object, _, f = C.getPrototypeOf, x = document, y, h, u, T = { isConnected: 1 }, H = 1e3, b, A = {}, K = f(T), V = f(f), k = (t, e, s, n) => (t ?? (setTimeout(s, n), /* @__PURE__ */ new Set())).add(e), D = (t, e, s) => {
+  let n = h;
+  h = e;
   try {
-    return e(s);
-  } catch (n) {
-    return console.error(n), s;
+    return t(s);
+  } catch (o) {
+    return console.error(o), s;
   } finally {
-    h = o;
+    h = n;
   }
-}, m = (e) => e.filter((t) => {
+}, m = (t) => t.filter((e) => {
   var s;
-  return (s = t._dom) == null ? void 0 : s.isConnected;
-}), D = (e) => y = T(y, e, () => {
-  for (let t of y)
-    t._bindings = m(t._bindings), t._listeners = m(t._listeners);
-  y = _;
-}, B), v = {
+  return (s = e._dom) == null ? void 0 : s.isConnected;
+}), E = (t) => b = k(b, t, () => {
+  for (let e of b)
+    e._bindings = m(e._bindings), e._listeners = m(e._listeners);
+  b = _;
+}, H), v = {
   get val() {
     return h == null || h.add(this), this._val;
   },
   get oldVal() {
     return h == null || h.add(this), this._oldVal;
   },
-  set val(e) {
-    let t = this;
-    if (e !== t._val) {
-      t._val = e;
-      let s = [...t._listeners = m(t._listeners)];
-      for (let o of s)
-        W(o.f, o.s, o._dom), o._dom = _;
-      t._bindings.length ? b = T(b, t, q) : t._oldVal = e;
+  set val(t) {
+    let e = this;
+    if (t !== e._val) {
+      e._val = t;
+      let s = [...e._listeners = m(e._listeners)];
+      for (let n of s)
+        W(n.f, n.s, n._dom), n._dom = _;
+      e._bindings.length ? y = k(y, e, Q) : e._oldVal = t;
     }
   }
-}, I = (e) => ({
+}, I = (t) => ({
   __proto__: v,
-  _val: e,
-  _oldVal: e,
+  _val: t,
+  _oldVal: t,
   _bindings: [],
   _listeners: []
-}), E = (e) => f(e ?? 0) === v, H = (e) => E(e) ? e.val : e, K = (e) => E(e) ? e.oldVal : e, g = (e, t) => {
-  let s = /* @__PURE__ */ new Set(), o = { f: e }, n = u;
+}), j = (t) => f(t ?? 0) === v, L = (t) => j(t) ? t.val : t, q = (t) => j(t) ? t.oldVal : t, g = (t, e) => {
+  let s = /* @__PURE__ */ new Set(), n = { f: t }, o = u;
   u = [];
-  let i = V(e, s, t);
-  i = (i ?? C).nodeType ? i : new Text(i);
+  let i = D(t, s, e);
+  i = (i ?? x).nodeType ? i : new Text(i);
   for (let a of s)
-    D(a), a._bindings.push(o);
+    E(a), a._bindings.push(n);
   for (let a of u)
     a._dom = i;
-  return u = n, o._dom = i;
-}, W = (e, t = I(), s) => {
-  let o = /* @__PURE__ */ new Set(), n = { f: e, s: t };
-  n._dom = s ?? (u == null ? void 0 : u.push(n)) ?? k, t.val = V(e, o);
-  for (let i of o)
-    D(i), i._listeners.push(n);
+  return u = o, n._dom = i;
+}, W = (t, e = I(), s) => {
+  let n = /* @__PURE__ */ new Set(), o = { f: t, s: e };
+  o._dom = s ?? (u == null ? void 0 : u.push(o)) ?? T, e.val = D(t, n);
+  for (let i of n)
+    E(i), i._listeners.push(o);
+  return e;
+}, F = (t, ...e) => {
+  for (let s of e.flat(1 / 0)) {
+    let n = f(s ?? 0), o = n === v ? g(() => s.val) : n === V ? g(s) : s;
+    o != _ && t.append(o);
+  }
   return t;
-}, R = (e, ...t) => {
-  for (let s of t.flat(1 / 0)) {
-    let o = f(s ?? 0), n = o === v ? g(() => s.val) : o === N ? g(s) : s;
-    n != _ && e.append(n);
-  }
-  return e;
-}, L = (e) => (e._isBindingFunc = 1, e), A = (e) => new Proxy((t, ...s) => {
+}, z = (t) => (t._isBindingFunc = 1, t), N = (t) => new Proxy((e, ...s) => {
   var a;
-  let [o, ...n] = f(s[0] ?? 0) === G ? s : [{}, ...s], i = e ? C.createElementNS(e, t) : C.createElement(t);
-  for (let [l, d] of S.entries(o)) {
-    let c = (x) => x ? S.getOwnPropertyDescriptor(x, l) ?? c(f(x)) : _, p = t + "," + l, r = P[p] ?? (P[p] = ((a = c(f(i))) == null ? void 0 : a.set) ?? 0), w = r ? r.bind(i) : i.setAttribute.bind(i, l), O = f(d ?? 0);
-    O === v ? g(() => (w(d.val), i)) : O === N && (!l.startsWith("on") || d._isBindingFunc) ? g(() => (w(d()), i)) : w(d);
+  let [n, ...o] = f(s[0] ?? 0) === K ? s : [{}, ...s], i = t ? x.createElementNS(t, e) : x.createElement(e);
+  for (let [l, d] of C.entries(n)) {
+    let c = (S) => S ? C.getOwnPropertyDescriptor(S, l) ?? c(f(S)) : _, p = e + "," + l, r = A[p] ?? (A[p] = ((a = c(f(i))) == null ? void 0 : a.set) ?? 0), w = r ? r.bind(i) : i.setAttribute.bind(i, l), O = f(d ?? 0);
+    O === v ? g(() => (w(d.val), i)) : O === V && (!l.startsWith("on") || d._isBindingFunc) ? g(() => (w(d()), i)) : w(d);
   }
-  return R(i, ...n);
-}, { get: (t, s) => t.bind(_, s) }), $ = (e, t) => t ? t !== e && e.replaceWith(t) : e.remove(), q = () => {
-  let e = [...b].filter((t) => t._val !== t._oldVal);
-  b = _;
-  for (let t of new Set(e.flatMap((s) => s._bindings = m(s._bindings))))
-    $(t._dom, g(t.f, t._dom)), t._dom = _;
-  for (let t of e)
-    t._oldVal = t._val;
-}, Q = (e, t) => $(e, g(t, e));
-const F = { add: R, _: L, tags: A(), tagsNS: A, state: I, val: H, oldVal: K, derive: W, hydrate: Q }, U = (e) => {
-  for (const t of Object.keys(e))
-    t.startsWith("@") && (e[`on${t.slice(1)}`] = e[t], delete e[t]);
-  return e;
-};
-function X(e, t, ...s) {
-  let o = U({ ...t });
-  const n = F.tags[e];
-  return o ? n(o, ...s) : n(...s);
+  return F(i, ...o);
+}, { get: (e, s) => e.bind(_, s) }), J = (t, e) => e ? e !== t && t.replaceWith(e) : t.remove(), Q = () => {
+  let t = [...y].filter((e) => e._val !== e._oldVal);
+  y = _;
+  for (let e of new Set(t.flatMap((s) => s._bindings = m(s._bindings))))
+    J(e._dom, g(e.f, e._dom)), e._dom = _;
+  for (let e of t)
+    e._oldVal = e._val;
+}, U = (t, e) => J(t, g(e, t));
+const M = { add: F, _: z, tags: N(), tagsNS: N, state: I, val: L, oldVal: q, derive: W, hydrate: U };
+function X(t, e, ...s) {
+  const n = M.tags[t];
+  return e ? n(e, ...s) : n(...s);
 }
-const Z = z.bind(X), { state: tt, derive: et } = F;
+const ie = G.bind(X);
+let { fromEntries: Y, entries: Z } = Object, ee = (t) => typeof t != "object" ? te(t) : Y(Z(t).map(([e, s]) => [e, ee(s)]));
+const { state: te, derive: oe } = M;
 export {
-  M as ReactiveWC,
-  Y as defineComponent,
-  et as derive,
-  Z as html,
-  tt as state
+  $ as ReactiveWC,
+  se as defineComponent,
+  oe as derive,
+  ie as html,
+  ee as reactive,
+  te as state
 };
