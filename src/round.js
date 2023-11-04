@@ -1,11 +1,11 @@
-let transformTextNodes = (arr) => {
-  if (!Array.isArray(arr)) {
+let { isArray: isArray } = Array;
+let txtNodes = (arr) => {
+  if (!isArray(arr)) {
     return typeof arr === "string" ? document.createTextNode(arr) : arr;
   }
-  let final = arr.map((el) => {
-    return typeof el == "string" ? document.createTextNode(el) : el;
-  });
-  return final;
+  return arr.map((el) =>
+    typeof el == "string" ? document.createTextNode(el) : el
+  );
 };
 
 export class ReactiveWC extends HTMLElement {
@@ -14,7 +14,14 @@ export class ReactiveWC extends HTMLElement {
   }
   connectedCallback() {
     this.getProps();
-    this.firstRender();
+    let root = this.shadowRoot ? this.shadowRoot : this;
+    let content = txtNodes(this.ctx.render(this.ctx) ?? this.render());
+
+    if (isArray(content)) {
+      content.forEach((el) => root.appendChild(el));
+    } else {
+      root.appendChild(content);
+    }
     this.onInit();
   }
   attributeChangedCallback(n, ov, nv) {
@@ -23,16 +30,6 @@ export class ReactiveWC extends HTMLElement {
   }
   disconnectedCallback() {
     this.onDestroy();
-  }
-  firstRender() {
-    let root = this.shadowRoot ? this.shadowRoot : this;
-    let content = transformTextNodes(this.ctx.render(this.ctx));
-
-    if (Array.isArray(content)) {
-      content.forEach((el) => root.appendChild(el));
-    } else {
-      root.appendChild(content);
-    }
   }
   getProps() {
     this.getAttributeNames().forEach((attr) => {
@@ -56,7 +53,6 @@ let bindScopes = (ctx) => {
   }
   return ctx;
 };
-
 export let defineComponent = (tagName, ctx, options = {}) => {
   window.customElements.define(
     tagName,
@@ -70,17 +66,17 @@ export let defineComponent = (tagName, ctx, options = {}) => {
         }
       }
       onInit() {
-        if (this.ctx && typeof this.ctx["onInit"] === "function") {
+        if (this.ctx["onInit"]) {
           this.ctx.onInit(this);
         }
       }
       onDestroy() {
-        if (this.ctx && typeof this.ctx["onDestroy"] === "function") {
+        if (this.ctx["onDestroy"]) {
           this.ctx.onDestroy(this);
         }
       }
       watch(n, ov, nv) {
-        if (this.ctx && typeof this.ctx["watch"] === "function") {
+        if (this.ctx["watch"]) {
           this.ctx.watch(n, ov, nv, this);
         }
       }

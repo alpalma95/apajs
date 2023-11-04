@@ -47,14 +47,14 @@ defineComponent(
 );
 
 defineComponent("custom-2", {
+  // VanX (addon) offers a reactive function that does the same. However, for the scope of
+  // RoundJS, I believe it'd be an overkill, since it implies other helpers. I decided
+  // to go with my own lightweight version, based on Van state
   state: reactive({ count: 0 }),
   items: [
     { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
   ],
-  onInit() {
-    console.log(this.count);
-  },
   render: ({ state, items }) => html`<div>
     <h1>Test works! ${state.count}</h1>
     <ul>
