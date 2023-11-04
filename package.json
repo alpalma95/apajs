@@ -1,5 +1,5 @@
 {
-  "name": "roundjs",
+  "name": "apajs",
   "version": "0.0.1",
   "description": "Small library wrapping the Web Components API",
   "main": "index.js",
