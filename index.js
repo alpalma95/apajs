@@ -56,6 +56,7 @@ defineComponent(
 // as we would do in JSX or in other web components libraries like Lit or Hybrids. I'll look for a solution
 // after tests have been implemented
 // We will use this below
+// Tip: see how we can use "functional" components
 const reactiveList = arr => {
   const removeItem = itemID => {
     arr.splice([arr.findIndex(item => item.id == itemID)], 1);
@@ -99,7 +100,7 @@ defineComponent("custom-2", {
     <h1>Test works! ${() => state.count}</h1>
     <button onclick="${addItem}">Inc reactive</button>
     <h2>Non reactive list</h2>
-    <!-- Note that in this case a simple map would do the job as well -->
+    <!-- Note that in this case a simple map would work as expected -->
     ${nonReactiveItems.map(
       item => html`<li>Item: ${item.id}: ${item.text}</li>`
     )}
@@ -107,7 +108,7 @@ defineComponent("custom-2", {
     <h2>Reactive list: Items <strong>${() => items.length}</strong></h2>
     <!-- Disclaimer2: if we use the reactiveList property getter, this condition will work
     until the list is empty. Then, after we add more items, we can see how the number of items
-    is still incrementing but the list will show empty -->
+    is still incrementing and the p has been replaced with the ul, but the list will show empty -->
     ${() => (items.length > 0 ? reactiveList(items) : html`<p>No items!</p>`)}
   </div>`,
 });
