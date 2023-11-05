@@ -76,7 +76,6 @@ export let defineComponent = (tagName, ctx, options = {}) => {
         super();
         this.ctx = bindScopes(ctx);
         this.ctx["getHost"] = () => this;
-        console.log(this.ctx);
         if (options.shadow) {
           this.attachShadow({ mode: options.shadow });
         }
