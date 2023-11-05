@@ -1,8 +1,7 @@
 import htm from "htm/mini";
-import van from "vanjs-core";
-
+import { tags } from "./van";
 function h(type, props, ...children) {
-  const t = van.tags[type];
+  const t = tags[type];
   if (props) return t(props, ...children);
   return t(...children);
 }
