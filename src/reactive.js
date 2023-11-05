@@ -1,6 +1,6 @@
 import { state as s } from ".";
-let { fromEntries: fe, entries: e } = Object;
+import { fromEntries, entries } from "./utils";
 export let reactive = (obj) =>
   typeof obj !== "object"
     ? s(obj)
-    : fe(e(obj).map(([k, v]) => [k, reactive(v)]));
+    : fromEntries(entries(obj).map(([k, v]) => [k, reactive(v)]));
