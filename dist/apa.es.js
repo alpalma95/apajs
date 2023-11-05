@@ -177,8 +177,7 @@ let { fromEntries: ce, entries: pe, keys: ue, getPrototypeOf: Z } = Object, { ge
   var l;
   for (let i of j(t))
     (l = [...i._containerDom.childNodes].find((s) => s[V] === e)) == null || l.remove();
-};
-const { state: De, derive: Ie, tags: $e } = Y;
+}, { state: De, derive: Ie, tags: $e } = Y;
 function ke(t, e, ...l) {
   const i = $e[t];
   return e ? i(e, ...l) : i(...l);
