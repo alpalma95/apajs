@@ -25,7 +25,7 @@ const config = {
     url: "apa.min.js.map",
   },
   output: {
-    comments: "some",
+    comments: false,
   },
 };
 
