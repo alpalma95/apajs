@@ -53,7 +53,8 @@ defineComponent(
 // For looping over an array of items, we need to use the list function (directly exported from vanX addon)
 // Items array must be a reactive object.
 // Disclaimer: I don't really like this, as it feels a bit more cumbersome than directly mapping an array,
-// as we would do in JSX or in other web components libraries like Lit or Hybrids.
+// as we would do in JSX or in other web components libraries like Lit or Hybrids. I'll look for a solution
+// after tests have been implemented
 // We will use this below
 const reactiveList = arr => {
   const removeItem = itemID => {
