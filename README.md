@@ -37,9 +37,9 @@ That's why I invested quite a lot of time in researching possible solutions. Aft
 - [VanJS](https://vanjs.org/): Literally, it only provides reactivity and a functional approach to templating. Gzipped, it's _only 0.9kb_.
 - [HTM](https://github.com/developit/htm): It uses tagged template literals to build the DOM based on a sort of "pragma". It was originally designed to pair with Preact, so we could use it without a build step. I wired it up so it'd take VanJS as pragma. _Under 500b_.
 
-These, integrated and combined with the core of ApaJS, weigh (minified) about just _4.5kb_ **without gzip** (I kept track of the dist files for easier reading of sizes). This was one of my requirements, that it could be just dropped into an `assets` folder and export the functionalities directly into the code. Without any build step or additional compression.
+These, integrated and combined with the core of ApaJS, weigh (minified) about just _<6kb_ **without gzip** (I kept track of the dist files for easier reading of sizes). This was one of my requirements, that it could be just dropped into an `assets` folder and export the functionalities directly into the code. Without any build step or additional compression.
 
-Yet, gzipped it's **2.45kb**. This can change as Apa is under active development, but I'm not planning to add any extra functionalities, only tests and do the needed amendments. I'm aware there's also some duplication and some things I could do to improve these numbers, so I hope everything balances right.
+Yet, gzipped it's **3kb**. This can change as Apa is under active development, but I'm not planning to add any extra functionalities, only tests and do the needed amendments. I'm aware there's also some duplication and some things I could do to improve these numbers, so I hope everything balances right.
 
 ### It's my work (OK, this one is maybe too personal)
 
