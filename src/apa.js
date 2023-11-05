@@ -1,6 +1,7 @@
 import { isArray, createTextNode } from "./utils";
 import { jsonparse } from "./utils";
 import { keys } from "./utils";
+
 let txtNodes = arr => {
   if (!isArray(arr)) {
     return typeof arr === "string" ? createTextNode(arr) : arr;

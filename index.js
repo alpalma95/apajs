@@ -1,8 +1,7 @@
 import { defineComponent } from "./src/apa";
 import { derive, html } from "./src";
 import { state } from "./src";
-import { reactive } from "./src/reactive";
-import van from "vanjs-core";
+import { list, reactive } from "./src/van";
 
 defineComponent(
   "custom-1",
@@ -51,36 +50,63 @@ defineComponent(
   { shadow: "open" }
 );
 
+// For looping over an array of items, we need to use the list function (directly exported from vanX addon)
+// Items array must be a reactive object.
+// Disclaimer: I don't really like this, as it feels a bit more cumbersome than directly mapping an array,
+// as we would do in JSX or in other web components libraries like Lit or Hybrids.
+// We will use this below
+const reactiveList = arr => {
+  const removeItem = itemID => {
+    arr.splice([arr.findIndex(item => item.id == itemID)], 1);
+  };
+  return list(
+    () => html`<ul class="red"></ul>`, // callback returning the container of the list
+    arr, // dependencies array
+    item =>
+      // map function as we would normally do
+      html`<li>
+        Item no: ${item.val.id}: ${item.val.text}
+        <button onclick="${() => removeItem(item.val.id)}">remove</button>
+      </li>`
+  );
+};
+
 defineComponent("custom-2", {
-  // VanX (addon) offers a reactive function that does the same. However, for the scope of
-  // ApaJS, I believe it'd be an overkill, since it implies other helpers. I decided
-  // to go with my own lightweight version, based on Van state
+  // Reactive, directly exported from vanX addon
   state: reactive({ count: 2 }),
-  items: state([
+  items: reactive([
     { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
   ]),
+  nonReactiveItems: [
+    { id: 1, text: "Item 1" },
+    { id: 2, text: "Item 2" },
+  ],
   addItem() {
-    this.state.count.val++;
+    this.state.count++;
     const newItem = {
-      id: this.state.count.val,
-      text: `Item num ${this.state.count.val}`,
+      id: this.state.count,
+      text: `Item num ${this.state.count}`,
     };
-    this.items.val = [...this.items.val, newItem];
-    van.add(
-      this.list_root,
-      html`<li>Item no: ${newItem.id}: ${newItem.text}</li>`
-    );
-    // this.state.count.val.add({
-    //   id: this.state.count.val,
-    //   text: `Item num ${this.state.count.val}`,
-    // });
-    console.log(this.items.val);
+    this.items.push(newItem);
   },
-  list_root: html`<ul key="random"></ul>`,
-  render: ({ state, items, addItem, list_root }) => html`<div>
-    <h1>Test works! ${state.count}</h1>
-    ${list_root}
+
+  // If we want the list to work as expected, we must mutate it, it's not enough with reassigning.
+
+  render: ({ state, addItem, items, nonReactiveItems }) => html`<div>
+    <!-- For accessing the value of reactive objects and them being reactive, we need to use an arrow function -->
+    <h1>Test works! ${() => state.count}</h1>
     <button onclick="${addItem}">Inc reactive</button>
+    <h2>Non reactive list</h2>
+    <!-- Note that in this case a simple map would do the job as well -->
+    ${nonReactiveItems.map(
+      item => html`<li>Item: ${item.id}: ${item.text}</li>`
+    )}
+    <!-- Here we're using the mapped array. We could do it inline as well -->
+    <h2>Reactive list: Items <strong>${() => items.length}</strong></h2>
+    <!-- Disclaimer2: if we use the reactiveList property getter, this condition will work
+    until the list is empty. Then, after we add more items, we can see how the number of items
+    is still incrementing but the list will show empty -->
+    ${() => (items.length > 0 ? reactiveList(items) : html`<p>No items!</p>`)}
   </div>`,
 });
