@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node minify.js && gzip dist/apa.es.min.js",
+    "build": "vite build && node minify.js && gzip -c dist/apa.es.min.js > dist/apa.es.min.gz",
     "preview": "vite preview"
   },
   "author": "@alpalma95",
