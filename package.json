@@ -1,14 +1,24 @@
 {
   "name": "apajs",
   "version": "0.0.3",
-  "description": "Small library wrapping the Web Components API",
-  "main": "index.js",
+  "description": "2.5kb library wrapping the Web Components API with reactivity out of the box.",
+  "main": "./src/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "unpkg": "./dist/apa.es.min.js",
+  "module": "./dist/apa.es.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build && node minify.js && gzip -c dist/apa.es.min.js > dist/apa.es.min.gz",
     "preview": "vite preview"
   },
-  "author": "@alpalma95",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alpalma95/apajs.git"
+  },
+  "author": "Álvaro Palma",
   "license": "MIT",
   "devDependencies": {
     "terser": "^5.24.0",
