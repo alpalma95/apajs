@@ -2,12 +2,9 @@
     <img src="./public/apa-thumbnail.png" alt="Cute water drop with eyes and smile" width="150" align="right" />
 </picture>
 
-<h1 width="50%">ApăJS</h1>
-
+<h1>ApăJS</h1>
 
 <sub> `Apă` (_water_, in Romanian) &ndash; For when you just need a little hydration.</sub>
-
-
 
 ## Intro
 
