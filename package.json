@@ -1,12 +1,19 @@
 {
   "name": "apajs",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "2.5kb library wrapping the Web Components API with reactivity out of the box.",
   "main": "./src/index.js",
   "files": [
     "dist",
     "src"
   ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/apa.es.min.js",
+      "require": "./dist/apa.umd.js"
+    }
+  },
   "unpkg": "./dist/apa.es.min.js",
   "module": "./dist/apa.es.js",
   "scripts": {
