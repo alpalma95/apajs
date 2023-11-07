@@ -1,6 +1,5 @@
-<h1>ApăJS</h1> 
-
-![Cute water drop](./public/apa-thumbnail.png "Cute")
+# ApăJS
+<img src="./public/apa-thumbnail.png" alt="Cute water drop with eyes and smile" width="150" />
 
 <sub> `Apă` (_water_, in Romanian) &ndash; For when you just need a little hydration.</sub>
 
