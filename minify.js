@@ -1,6 +1,6 @@
-const { minify } = require("terser");
+import { minify } from "terser";
 
-const fs = require("fs");
+import fs from "fs";
 
 const config = {
   compress: {
