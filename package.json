@@ -1,6 +1,6 @@
 {
   "name": "apajs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Small library wrapping the Web Components API",
   "main": "index.js",
   "scripts": {
