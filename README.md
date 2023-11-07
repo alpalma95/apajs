@@ -1,4 +1,13 @@
-# ApaJS
+<table>
+    <tbody>
+        <tr>
+            <td><h1 style="margin-top: 20px;font-size:50px">ApăJS</h1></td>
+            <td><img src="./public/apa-thumbnail.png" alt="Cute water drop with eyes and smile" width="150" /> </td>
+        </tr>
+    </tbody>
+</table>
+
+
 
 <sub> `Apă` (_water_, in Romanian) &ndash; For when you just need a little hydration.</sub>
 
