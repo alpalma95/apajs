@@ -1,4 +1,4 @@
-import { defineComponent } from "./src/apa";
+import { defineComponent } from "./dist/apa.es";
 import { derive, html } from "./src";
 import { state } from "./src";
 import { list, reactive } from "./src/van";

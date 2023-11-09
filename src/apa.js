@@ -59,11 +59,8 @@ let bindScopes = ctx => {
   return ctx;
 };
 
-// This will help in case anyone is using the unminified module script. Minifier script will remove JSDoc as well.
 /**
- * Accepts a tag name, a context object and an options object. Options are optional and they will default
- * into an empty object (hence no shadow root will be applied and no attributes will be watched)
- * @type {import("./main").DefineComponent} Define component function
+ * @type {import("./main").DefineComponent}
  */
 export let defineComponent = (tagName, ctx, options = {}) => {
   window.customElements.define(
