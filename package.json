@@ -1,6 +1,6 @@
 {
   "name": "apajs",
-  "version": "0.0.32",
+  "version": "0.1.0",
   "description": "2.5kb library wrapping the Web Components API with reactivity out of the box.",
   "main": "./src/index.js",
   "files": [
@@ -19,7 +19,7 @@
   "module": "./dist/apa.es.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node minify.js && gzip -c dist/apa.es.min.js > dist/apa.es.min.gz && cp ./src/main.d.ts ./dist/",
+    "build": "vite build && node minify.js && gzip -c dist/apa.es.min.js > dist/apa.es.min.gz && cp ./src/main.d.ts ./dist/apa.es.d.ts && cp ./src/main.d.ts ./dist/apa.es.min.d.ts",
     "preview": "vite preview"
   },
   "repository": {
@@ -38,5 +38,12 @@
     "htm": "^3.1.1",
     "vanjs-core": "^1.2.6",
     "vanjs-ext": "^0.1.3"
-  }
+  },
+  "keywords": [
+    "vanjs",
+    "Web Components",
+    "htm",
+    "Custom Elements",
+    "Reactivity"
+  ]
 }
