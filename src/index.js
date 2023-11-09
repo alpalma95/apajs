@@ -1,5 +1,6 @@
-import { ReactiveWC, defineComponent } from "./apa";
+/// <reference path="./main.d.ts" />
+import { defineComponent } from "./apa";
 import { html } from "./html";
 import { state, derive, reactive } from "./van";
 
-export { ReactiveWC, html, state, derive, defineComponent, reactive };
+export { html, state, derive, defineComponent, reactive };

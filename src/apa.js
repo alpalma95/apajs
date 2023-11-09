@@ -1,15 +1,18 @@
-import { isArray, createTextNode } from "./utils";
-import { jsonparse } from "./utils";
+import { isArray } from "./utils";
+import { jsonParse } from "./utils";
 import { keys } from "./utils";
 
 let txtNodes = arr => {
+  console.log(arr);
   if (!isArray(arr)) {
-    return typeof arr === "string" ? createTextNode(arr) : arr;
+    return typeof arr === "string" ? document.createTextNode(arr) : arr;
   }
-  return arr.map(el => (typeof el == "string" ? createTextNode(el) : el));
+  return arr.map(el =>
+    typeof el == "string" ? document.createTextNode(el) : el
+  );
 };
 
-export class ReactiveWC extends HTMLElement {
+class ReactiveWC extends HTMLElement {
   constructor() {
     super();
   }
@@ -17,43 +20,31 @@ export class ReactiveWC extends HTMLElement {
     this.getAttributeNames().forEach(attr => {
       if (!attr.startsWith(":")) return;
       let temp = {};
-      temp[attr.slice(1)] = jsonparse(this.getAttribute(attr));
-      !this.ctx ? (this.props = temp) : (this.ctx["props"] = temp);
+      temp[attr.slice(1)] = jsonParse(this.getAttribute(attr));
+      this.ctx["props"] = temp;
     });
-    let root = this.shadowRoot ? this.shadowRoot : this;
-    let content = txtNodes(this.render());
+    let root = this.shadowRoot ?? this;
+    let content = txtNodes(this.ctx.render(this.ctx));
 
     if (isArray(content)) {
       content.forEach(el => root.appendChild(el));
     } else {
       root.appendChild(content);
     }
-    this.onInit();
-  }
-  attributeChangedCallback(n, ov, nv) {
-    n.startsWith(":") ? (this[n.slice(1)] = nv) : (this[n] = nv);
-    this.watch(n.slice(1), jsonparse(ov), jsonparse(nv));
-  }
-  disconnectedCallback() {
-    this.onDestroy();
-  }
-  watch(n, ov, nv) {
-    if (this.ctx["watch"]) {
-      this.ctx.watch(n, ov, nv, this);
-    }
-  }
-  onInit() {
+
     if (this.ctx["onInit"]) {
       this.ctx.onInit(this);
     }
   }
-  onDestroy() {
+  attributeChangedCallback(n, ov, nv) {
+    if (this.ctx["watch"]) {
+      this.ctx.watch(n.slice(1), jsonParse(ov), jsonParse(nv), this);
+    }
+  }
+  disconnectedCallback() {
     if (this.ctx["onDestroy"]) {
       this.ctx.onDestroy(this);
     }
-  }
-  render() {
-    return this.ctx.render(this.ctx);
   }
 }
 

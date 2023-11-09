@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: "src/index.js",
       name: "apajs",
-      fileName: (format) => `apa.${format}.js`,
+      fileName: format => `apa.${format}.js`,
     },
   },
 });

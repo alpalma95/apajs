@@ -14,7 +14,7 @@ class le extends HTMLElement {
     G(l) ? l.forEach((i) => e.appendChild(i)) : e.appendChild(l), this.onInit();
   }
   attributeChangedCallback(e, l, i) {
-    e.startsWith(":") ? this[e.slice(1)] = i : this[e] = i, this.watch(e.slice(1), P(l), P(i));
+    e.startsWith(":") ? this.props[e.slice(1)] = i : this[e] = i, this.watch(e.slice(1), P(l), P(i));
   }
   disconnectedCallback() {
     this.onDestroy();

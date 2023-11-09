@@ -1,5 +1,5 @@
 <picture>
-    <img src="./public/apa-thumbnail.png" alt="Cute water drop with eyes and smile" width="150" align="right" />
+    <img src="./docs/img/apa-thumbnail.png" alt="Cute water drop with eyes and smile" width="150" align="right" />
 </picture>
 
 <h1>ApăJS</h1>

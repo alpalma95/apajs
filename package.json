@@ -8,6 +8,7 @@
     "src"
   ],
   "type": "module",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/apa.es.min.js",
@@ -18,7 +19,7 @@
   "module": "./dist/apa.es.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node minify.js && gzip -c dist/apa.es.min.js > dist/apa.es.min.gz",
+    "build": "vite build && node minify.js && gzip -c dist/apa.es.min.js > dist/apa.es.min.gz && cp ./src/main.d.ts ./dist/",
     "preview": "vite preview"
   },
   "repository": {
@@ -29,7 +30,9 @@
   "license": "MIT",
   "devDependencies": {
     "terser": "^5.24.0",
-    "vite": "^4.5.0"
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-plugin-dts": "^3.6.3"
   },
   "dependencies": {
     "htm": "^3.1.1",
