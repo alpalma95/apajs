@@ -31,7 +31,7 @@ export interface Context {
 
 export interface Options {
   shadow?: shadow;
-  observed: string[];
+  observed?: string[];
 }
 
 export type DefineComponent = (
@@ -39,5 +39,3 @@ export type DefineComponent = (
   ctx: Context,
   opt?: Options
 ) => void;
-
-export declare const defineComponent: DefineComponent;

@@ -1,9 +1,10 @@
+/// <reference types="./main.d.ts" />
+
 import { isArray } from "./utils";
 import { jsonParse } from "./utils";
 import { keys } from "./utils";
 
 let txtNodes = arr => {
-  console.log(arr);
   if (!isArray(arr)) {
     return typeof arr === "string" ? document.createTextNode(arr) : arr;
   }
@@ -15,6 +16,7 @@ let txtNodes = arr => {
 class ReactiveWC extends HTMLElement {
   constructor() {
     super();
+    this.ctx = {};
   }
   connectedCallback() {
     this.getAttributeNames().forEach(attr => {
@@ -57,6 +59,12 @@ let bindScopes = ctx => {
   return ctx;
 };
 
+// This will help in case anyone is using the unminified module script. Minifier script will remove JSDoc as well.
+/**
+ * Accepts a tag name, a context object and an options object. Options are optional and they will default
+ * into an empty object (hence no shadow root will be applied and no attributes will be watched)
+ * @type {import("./main").DefineComponent} Define component function
+ */
 export let defineComponent = (tagName, ctx, options = {}) => {
   window.customElements.define(
     tagName,
