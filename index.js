@@ -1,4 +1,4 @@
-import { defineComponent } from "./dist/apa.es";
+import { defineComponent } from "./src";
 import { derive, html } from "./src";
 import { state } from "./src";
 import { list, reactive } from "./src/van";
@@ -28,7 +28,8 @@ defineComponent(
     onInit(host) {
       // Unfortunately this is the only way to make props reactive.
       // On init, we set the val of the state() to this.props.whatever
-      this.count.val = this.props.initial_count;
+      this.count.val = +this.props.initial_count;
+      console.log(this.props.initial_count);
       console.log("From onInit!", host);
     },
     // Under the hood, the whole context is passed as argument, hence we can destructure
@@ -40,6 +41,7 @@ defineComponent(
         <!-- This is how we access props from template, if we don't want them to be reactive -->
         Count started at: ${props.initial_count}
       </h2>
+      <p>Message from test prop: <strong>${props.test}</strong></p>
       <div class="red">Count is: ${count} and double is: ${double}</div>
       <button onclick="${() => inc(3)}">++</button>
 
