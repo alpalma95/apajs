@@ -1,73 +1,74 @@
-let { isArray: I } = Array, { fromEntries: ke, entries: Ee, keys: j } = Object, { parse: A } = JSON, ee = (e) => I(e) ? e.map(
+let { isArray: O } = Array, le = (e) => O(e) ? e.map(
   (t) => typeof t == "string" ? document.createTextNode(t) : t
-) : typeof e == "string" ? document.createTextNode(e) : e;
-class te extends HTMLElement {
-  constructor() {
-    super(), this.ctx = {};
-  }
-  connectedCallback() {
-    this.getAttributeNames().forEach((i) => {
-      if (!i.startsWith(":"))
-        return;
-      let n = {};
-      n[i.slice(1)] = A(this.getAttribute(i)), this.ctx.props = n;
-    });
-    let t = this.shadowRoot ?? this, l = ee(this.ctx.render(this.ctx));
-    I(l) ? l.forEach((i) => t.appendChild(i)) : t.appendChild(l), this.ctx.onInit && this.ctx.onInit(this);
-  }
-  attributeChangedCallback(t, l, i) {
-    this.ctx.watch && this.ctx.watch(t.slice(1), A(l), A(i), this);
-  }
-  disconnectedCallback() {
-    this.ctx.onDestroy && this.ctx.onDestroy(this);
-  }
-}
-let le = (e) => {
-  for (let t of j(e))
-    typeof e[t] == "function" && (e[t] = e[t].bind(e));
-  return e;
-}, Ne = (e, t, l = {}) => {
+) : typeof e == "string" ? document.createTextNode(e) : e, Te = (e, t) => {
   window.customElements.define(
-    e,
-    class extends te {
-      static get observedAttributes() {
-        return l.observed ?? [];
-      }
+    e.tag,
+    class extends HTMLElement {
       constructor() {
-        super(), this.ctx = le(t), this.ctx.getHost = () => this, l.shadow && this.attachShadow({ mode: l.shadow });
+        super(), this.ctx = {
+          onInit: (l = () => {
+          }) => l(),
+          onDestroy: (l = () => {
+          }) => l(),
+          subscribers: [],
+          getHost: () => this,
+          watch: (l, n) => this.ctx.subscribers.push({
+            attributeName: l,
+            cb: n
+          })
+        }, e.shadow && this.attachShadow({ mode: e.shadow });
+      }
+      static get observedAttributes() {
+        return [e.observed];
+      }
+      connectedCallback() {
+        let l = {};
+        this.getAttributeNames().forEach((o) => {
+          o.startsWith(":") && (l[o.slice(1)] = this.getAttribute(o));
+        }), this.ctx.props = l;
+        let n = le(t(this.ctx)), i = this.shadowRoot ?? this;
+        O(n) ? n.forEach((o) => i.appendChild(o)) : i.appendChild(n), this.ctx.onInit();
+      }
+      attributeChangedCallback(l, n, i) {
+        this.ctx.subscribers.forEach(({ attributeName: o, cb: r }) => {
+          l === o && r(l, n, i);
+        });
+      }
+      disconnectedCallback() {
+        this.ctx.onDestroy();
       }
     }
   );
 };
-function ie(e) {
-  for (var t, l, i = arguments, n = 1, s = "", d = "", o = [0], r = function(f) {
-    n === 1 && (f || (s = s.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? o.push(f ? i[f] : s) : n === 3 && (f || s) ? (o[1] = f ? i[f] : s, n = 2) : n === 2 && s === "..." && f ? o[2] = Object.assign(o[2] || {}, i[f]) : n === 2 && s && !f ? (o[2] = o[2] || {})[s] = !0 : n >= 5 && (n === 5 ? ((o[2] = o[2] || {})[l] = f ? s ? s + i[f] : i[f] : s, n = 6) : (f || s) && (o[2][l] += f ? s + i[f] : s)), s = "";
-  }, a = 0; a < e.length; a++) {
-    a && (n === 1 && r(), r(a));
-    for (var u = 0; u < e[a].length; u++)
-      t = e[a][u], n === 1 ? t === "<" ? (r(), o = [o, "", null], n = 3) : s += t : n === 4 ? s === "--" && t === ">" ? (n = 1, s = "") : s = t + s[0] : d ? t === d ? d = "" : s += t : t === '"' || t === "'" ? d = t : t === ">" ? (r(), n = 1) : n && (t === "=" ? (n = 5, l = s, s = "") : t === "/" && (n < 5 || e[a][u + 1] === ">") ? (r(), n === 3 && (o = o[0]), n = o, (o = o[0]).push(this.apply(null, n.slice(1))), n = 0) : t === " " || t === "	" || t === `
-` || t === "\r" ? (r(), n = 2) : s += t), n === 3 && s === "!--" && (n = 4, o = o[0]);
+function ne(e) {
+  for (var t, l, n = arguments, i = 1, o = "", r = "", s = [0], d = function(a) {
+    i === 1 && (a || (o = o.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? s.push(a ? n[a] : o) : i === 3 && (a || o) ? (s[1] = a ? n[a] : o, i = 2) : i === 2 && o === "..." && a ? s[2] = Object.assign(s[2] || {}, n[a]) : i === 2 && o && !a ? (s[2] = s[2] || {})[o] = !0 : i >= 5 && (i === 5 ? ((s[2] = s[2] || {})[l] = a ? o ? o + n[a] : n[a] : o, i = 6) : (a || o) && (s[2][l] += a ? o + n[a] : o)), o = "";
+  }, f = 0; f < e.length; f++) {
+    f && (i === 1 && d(), d(f));
+    for (var u = 0; u < e[f].length; u++)
+      t = e[f][u], i === 1 ? t === "<" ? (d(), s = [s, "", null], i = 3) : o += t : i === 4 ? o === "--" && t === ">" ? (i = 1, o = "") : o = t + o[0] : r ? t === r ? r = "" : o += t : t === '"' || t === "'" ? r = t : t === ">" ? (d(), i = 1) : i && (t === "=" ? (i = 5, l = o, o = "") : t === "/" && (i < 5 || e[f][u + 1] === ">") ? (d(), i === 3 && (s = s[0]), i = s, (s = s[0]).push(this.apply(null, i.slice(1))), i = 0) : t === " " || t === "	" || t === `
+` || t === "\r" ? (d(), i = 2) : o += t), i === 3 && o === "!--" && (i = 4, s = s[0]);
   }
-  return r(), o.length > 2 ? o.slice(1) : o[1];
+  return d(), s.length > 2 ? s.slice(1) : s[1];
 }
-let $ = Object, y, h = $.getPrototypeOf, k = document, b, c, p, W = { isConnected: 1 }, ne = 1e3, m, B = {}, se = h(W), M = h(h), R = (e, t, l, i) => (e ?? (setTimeout(l, i), /* @__PURE__ */ new Set())).add(t), H = (e, t, l) => {
-  let i = c;
+let E = Object, _, h = E.getPrototypeOf, $ = document, C, c, g, W = { isConnected: 1 }, oe = 1e3, S, I = {}, ie = h(W), H = h(h), R = (e, t, l, n) => (e ?? (setTimeout(l, n), /* @__PURE__ */ new Set())).add(t), L = (e, t, l) => {
+  let n = c;
   c = t;
   try {
     return e(l);
-  } catch (n) {
-    return console.error(n), l;
+  } catch (i) {
+    return console.error(i), l;
   } finally {
-    c = i;
+    c = n;
   }
-}, C = (e) => e.filter((t) => {
+}, w = (e) => e.filter((t) => {
   var l;
   return (l = t._dom) == null ? void 0 : l.isConnected;
-}), J = (e) => m = R(m, e, () => {
-  for (let t of m)
-    t._bindings = C(t._bindings), t._listeners = C(t._listeners);
-  m = y;
-}, ne), w = {
+}), q = (e) => S = R(S, e, () => {
+  for (let t of S)
+    t._bindings = w(t._bindings), t._listeners = w(t._listeners);
+  S = _;
+}, oe), A = {
   get val() {
     return c == null || c.add(this), this._val;
   },
@@ -78,105 +79,115 @@ let $ = Object, y, h = $.getPrototypeOf, k = document, b, c, p, W = { isConnecte
     let t = this;
     if (e !== t._val) {
       t._val = e;
-      let l = [...t._listeners = C(t._listeners)];
-      for (let i of l)
-        z(i.f, i.s, i._dom), i._dom = y;
-      t._bindings.length ? b = R(b, t, fe) : t._oldVal = e;
+      let l = [...t._listeners = w(t._listeners)];
+      for (let n of l)
+        Q(n.f, n.s, n._dom), n._dom = _;
+      t._bindings.length ? C = R(C, t, ae) : t._oldVal = e;
     }
   }
-}, L = (e) => ({
-  __proto__: w,
+}, z = (e) => ({
+  __proto__: A,
   _val: e,
   _oldVal: e,
   _bindings: [],
   _listeners: []
-}), q = (e) => h(e ?? 0) === w, oe = (e) => q(e) ? e.val : e, re = (e) => q(e) ? e.oldVal : e, _ = (e, t) => {
-  let l = /* @__PURE__ */ new Set(), i = { f: e }, n = p;
-  p = [];
-  let s = H(e, l, t);
-  s = (s ?? k).nodeType ? s : new Text(s);
-  for (let d of l)
-    J(d), d._bindings.push(i);
-  for (let d of p)
-    d._dom = s;
-  return p = n, i._dom = s;
-}, z = (e, t = L(), l) => {
-  let i = /* @__PURE__ */ new Set(), n = { f: e, s: t };
-  n._dom = l ?? (p == null ? void 0 : p.push(n)) ?? W, t.val = H(e, i);
-  for (let s of i)
-    J(s), s._listeners.push(n);
+}), J = (e) => h(e ?? 0) === A, se = (e) => J(e) ? e.val : e, re = (e) => J(e) ? e.oldVal : e, y = (e, t) => {
+  let l = /* @__PURE__ */ new Set(), n = { f: e }, i = g;
+  g = [];
+  let o = L(e, l, t);
+  o = (o ?? $).nodeType ? o : new Text(o);
+  for (let r of l)
+    q(r), r._bindings.push(n);
+  for (let r of g)
+    r._dom = o;
+  return g = i, n._dom = o;
+}, Q = (e, t = z(), l) => {
+  let n = /* @__PURE__ */ new Set(), i = { f: e, s: t };
+  i._dom = l ?? (g == null ? void 0 : g.push(i)) ?? W, t.val = L(e, n);
+  for (let o of n)
+    q(o), o._listeners.push(i);
   return t;
-}, Q = (e, ...t) => {
+}, U = (e, ...t) => {
   for (let l of t.flat(1 / 0)) {
-    let i = h(l ?? 0), n = i === w ? _(() => l.val) : i === M ? _(l) : l;
-    n != y && e.append(n);
+    let n = h(l ?? 0), i = n === A ? y(() => l.val) : n === H ? y(l) : l;
+    i != _ && e.append(i);
   }
   return e;
-}, de = (e) => (e._isBindingFunc = 1, e), D = (e) => new Proxy((t, ...l) => {
-  var d;
-  let [i, ...n] = h(l[0] ?? 0) === se ? l : [{}, ...l], s = e ? k.createElementNS(e, t) : k.createElement(t);
-  for (let [o, r] of $.entries(i)) {
-    let a = (P) => P ? $.getOwnPropertyDescriptor(P, o) ?? a(h(P)) : y, u = t + "," + o, f = B[u] ?? (B[u] = ((d = a(h(s))) == null ? void 0 : d.set) ?? 0), x = f ? f.bind(s) : s.setAttribute.bind(s, o), O = h(r ?? 0);
-    O === w ? _(() => (x(r.val), s)) : O === M && (!o.startsWith("on") || r._isBindingFunc) ? _(() => (x(r()), s)) : x(r);
+}, de = (e) => (e._isBindingFunc = 1, e), B = (e) => new Proxy((t, ...l) => {
+  var r;
+  let [n, ...i] = h(l[0] ?? 0) === ie ? l : [{}, ...l], o = e ? $.createElementNS(e, t) : $.createElement(t);
+  for (let [s, d] of E.entries(n)) {
+    let f = (T) => T ? E.getOwnPropertyDescriptor(T, s) ?? f(h(T)) : _, u = t + "," + s, a = I[u] ?? (I[u] = ((r = f(h(o))) == null ? void 0 : r.set) ?? 0), P = a ? a.bind(o) : o.setAttribute.bind(o, s), G = h(d ?? 0);
+    G === A ? y(() => (P(d.val), o)) : G === H && (!s.startsWith("on") || d._isBindingFunc) ? y(() => (P(d()), o)) : P(d);
   }
-  return Q(s, ...n);
-}, { get: (t, l) => t.bind(y, l) }), U = (e, t) => t ? t !== e && e.replaceWith(t) : e.remove(), fe = () => {
-  let e = [...b].filter((t) => t._val !== t._oldVal);
-  b = y;
-  for (let t of new Set(e.flatMap((l) => l._bindings = C(l._bindings))))
-    U(t._dom, _(t.f, t._dom)), t._dom = y;
+  return U(o, ...i);
+}, { get: (t, l) => t.bind(_, l) }), X = (e, t) => t ? t !== e && e.replaceWith(t) : e.remove(), ae = () => {
+  let e = [...C].filter((t) => t._val !== t._oldVal);
+  C = _;
+  for (let t of new Set(e.flatMap((l) => l._bindings = w(l._bindings))))
+    X(t._dom, y(t.f, t._dom)), t._dom = _;
   for (let t of e)
     t._oldVal = t._val;
-}, ae = (e, t) => U(e, _(t, e));
-const X = { add: Q, _: de, tags: D(), tagsNS: D, state: L, val: oe, oldVal: re, derive: z, hydrate: ae };
-let { fromEntries: ce, entries: he, keys: ue, getPrototypeOf: Y } = Object, { get: pe, set: F, deleteProperty: K, ownKeys: ye } = Reflect, v = Symbol, { state: T, derive: ge, add: _e, tags: Te } = X, ve = Y(T()), Se, g = v(), me = v(), be = v(), E = v(), S = v(), V = v(), G = (e) => e != null && e[be] ? ge(() => N(e())) : T(N(e)), N = (e) => {
-  if (!(e instanceof Object) || e[g])
+}, fe = (e, t) => X(e, y(t, e));
+const Y = { add: U, _: de, tags: B(), tagsNS: B, state: z, val: se, oldVal: re, derive: Q, hydrate: fe };
+let { fromEntries: ce, entries: Z, keys: he, getPrototypeOf: j } = Object, { get: ue, set: F, deleteProperty: K, ownKeys: pe } = Reflect, b = Symbol, { state: k, derive: ge, add: _e, tags: Ee } = Y, ye = j(k()), m, be = 1e3, ee, p = b(), ve = b(), Se = b(), x = b(), v = b(), V = b(), M = (e) => e != null && e[Se] ? ge(() => N(e())) : k(N(e)), N = (e) => {
+  if (!(e instanceof Object) || e[p])
     return e;
   let t = new Proxy(
-    (e[g] = ce(he(e).map(([l, i]) => [l, G(i)])), e[me] = e, e[E] = [], e[S] = T(1), e),
+    (e[p] = ce(Z(e).map(([l, n]) => [l, M(n)])), e[ve] = e, e[x] = [], e[v] = k(1), e),
     {
-      get: (l, i) => Y(l[g][i] ?? 0) === ve ? l[g][i].val : (i === "length" && l[S].val, pe(l, i, t)),
-      set(l, i, n) {
-        let s = l[g];
-        if (i in s)
-          return s[i].val = N(n), 1;
-        let d = i in l;
-        if (F(l, i, n))
-          return d || F(s, i, G(n)) && (++l[S].val, xe(t, i, s[i])), 1;
+      get: (l, n) => j(l[p][n] ?? 0) === ye ? l[p][n].val : (n === "length" && l[v].val, ue(l, n, t)),
+      set(l, n, i) {
+        let o = l[p];
+        if (n in o)
+          return o[n].val = N(i), 1;
+        let r = n in l;
+        if (F(l, n, i))
+          return r || F(o, n, M(i)) && (++l[v].val, Ce(t, n, o[n])), 1;
       },
-      deleteProperty: (l, i) => (K(l[g], i) && Pe(l, i), K(l, i) && ++l[S].val),
-      ownKeys: (l) => (l[S].val, ye(l))
+      deleteProperty: (l, n) => (K(l[p], n) && we(l, n), K(l, n) && ++l[v].val),
+      ownKeys: (l) => (l[v].val, pe(l))
     }
   );
   return t;
-}, Z = (e) => e[E] = e[E].filter((t) => t._containerDom.isConnected), Ce = (e, t, l, i) => () => {
-  let n = i(l, () => delete e[t]);
-  return n[V] = t, n;
-}, we = (e, t, l, { _containerDom: i, f: n }, s) => {
-  if (_e(i, Ce(e, t, l, n)), !s && Array.isArray(e) && t != e.length - 1) {
-    let d = {};
-    for (let r of i.childNodes)
-      d[r[V]] = r;
-    let o = i.firstChild;
-    for (let r of ue(e))
-      o === d[r] ? o = o.nextSibling : i.insertBefore(d[r], o);
+}, D = (e) => e[x] = e[x].filter((t) => t._containerDom.isConnected), me = (e, t, l, n) => () => {
+  let i = n(l, () => delete e[t]);
+  return i[V] = t, i;
+}, te = (e, t, l, { _containerDom: n, f: i }, o) => {
+  if (_e(n, me(e, t, l, i)), !o && Array.isArray(e) && t != e.length - 1) {
+    let r = {};
+    for (let d of n.childNodes)
+      r[d[V]] = d;
+    let s = n.firstChild;
+    for (let d of he(e))
+      s === r[d] ? s = s.nextSibling : n.insertBefore(r[d], s);
   }
-}, xe = (e, t, l) => Z(e).forEach(
-  we.bind(Se, e, t, l)
-), Pe = (e, t) => {
+}, Ce = (e, t, l) => D(e).forEach(
+  te.bind(ee, e, t, l)
+), we = (e, t) => {
   var l;
-  for (let i of Z(e))
-    (l = [...i._containerDom.childNodes].find((n) => n[V] === t)) == null || l.remove();
-}, { state: Ve, derive: Oe, tags: Ae } = X;
-function $e(e, t, ...l) {
-  const i = Ae[e];
-  return t ? i(t, ...l) : i(...l);
+  for (let n of D(e))
+    (l = [...n._containerDom.childNodes].find((i) => i[V] === t)) == null || l.remove();
+}, xe = (e) => (m ?? (m = (setTimeout(
+  () => (m.forEach(D), m = ee),
+  be
+), /* @__PURE__ */ new Set()))).add(e), $e = (e, t, l) => {
+  let n = { _containerDom: e(), f: l };
+  t[x].push(n), xe(t);
+  for (let [i, o] of Z(t[p]))
+    te(t, i, o, n, 1);
+  return n._containerDom;
+}, { state: Ne, derive: ke, tags: Ae } = Y;
+function Pe(e, t, ...l) {
+  const n = Ae[e];
+  return t ? n(t, ...l) : n(...l);
 }
-const Be = ie.bind($e);
+const Ve = ne.bind(Pe);
 export {
-  Ne as defineComponent,
-  Oe as derive,
-  Be as html,
+  Te as defineComponent,
+  ke as derive,
+  Ve as html,
+  $e as list,
   N as reactive,
-  Ve as state
+  Ne as state
 };

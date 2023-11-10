@@ -9,24 +9,17 @@ type props = {
   [key: string]: any;
 };
 
-type watch = (
-  name: String,
-  oldValue: any,
-  newValue: any,
-  host?: HTMLElement
-) => void;
+type watch = (name: String, oldValue: any, newValue: any) => void;
 
-interface ContextInternal extends Context {
-  getHost(): HTMLElement;
-  props?: props;
-}
+interface ContextInternal extends Context {}
 
 export interface Context {
   [key: string]: any;
   onInit?: (host?: HTMLElement) => void;
   onDestroy?: (host?: HTMLElement) => void;
   watch?: watch;
-  render: (ctx: ContextInternal) => HTMLElementOrString | HTMLElementOrString[];
+  getHost(): HTMLElement;
+  props?: props;
 }
 
 export interface Options {

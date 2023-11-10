@@ -1,12 +1,12 @@
-// {
-//   "compileOnSave": false,
-//   "compilerOptions": {
-//     "noEmit": true,
-//     "allowJs": true,
-//     "checkJs": true,
-//     "target": "ES2019",
-//     "resolveJsonModule": true,
-//     "moduleResolution": "node"
-//   },
-//   "include": ["./src"]
-// }
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": true,
+    "target": "ES2019",
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  },
+  "include": ["./src"]
+}
