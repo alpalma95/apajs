@@ -1,56 +1,34 @@
 import { defineComponent } from "./src";
 import { derive, html } from "./src";
 import { state } from "./src";
-import { list, reactive } from "./src/van";
+import { list, reactive } from "./src";
 
-defineComponent(
-  "custom-1",
-  {
-    // State, directly re-exported from van
-    count: state(3),
-    // Derive is also reexported from van. For computed values based on other
-    // states within the object literal, we should use a getter.
-    get double() {
-      return derive(() => this.count.val * 2);
-      // Notice the following would work, but wouldn't be reactive:
-      // return this.count.val * 2
-    },
+defineComponent({ tag: "custom-1", shadow: "open" }, function (ctx) {
+  const count = state(3);
+  const double = derive(() => count.val * 2);
+  const host = ctx.getHost();
 
-    inc(num) {
-      this.count.val += num;
-      // The get host function will be automatically added to the context, in case
-      // we want to interact with the class.
-      const host = this.getHost();
-      console.log("From a defined method!", host);
-    },
-    // For methods that have equivalent in lifecycle methods, the host argument
-    // will be passed automatically.
-    onInit(host) {
-      // Unfortunately this is the only way to make props reactive.
-      // On init, we set the val of the state() to this.props.whatever
-      this.count.val = +this.props.initial_count;
-      console.log(this.props.initial_count);
-      console.log("From onInit!", host);
-    },
-    // Under the hood, the whole context is passed as argument, hence we can destructure
-    // all the properties that we're defining above
-    render: ({ count, inc, props, double }) => html`<div>
-      <!-- Because of how Van works under the hood, we must set the whole property as calculated state.
-    style="color: \${()=>...}" would result into an empty attribute-->
-      <h2 style="${() => (count.val % 2 == 0 ? "color: red" : "color: blue")}">
-        <!-- This is how we access props from template, if we don't want them to be reactive -->
-        Count started at: ${props.initial_count}
-      </h2>
-      <p>Message from test prop: <strong>${props.test}</strong></p>
-      <div class="red">Count is: ${count} and double is: ${double}</div>
-      <button onclick="${() => inc(3)}">++</button>
+  const step = +ctx.props.step;
+  const inc = () => {
+    count.val += step;
+  };
 
-      <!-- Of course, we can use other custom elements in here! -->
-      <custom-2></custom-2>
-    </div>`,
-  },
-  { shadow: "open" }
-);
+  ctx.onInit(() => console.log(host));
+
+  return html`<div>
+    <!-- Because of how Van works under the hood, we must set the whole property as calculated state.
+  style="color: \${()=>...}" would result into an empty attribute-->
+    <h2 style="${() => (count.val % 2 == 0 ? "color: red" : "color: blue")}">
+      <!-- This is how we access props from template, if we don't want them to be reactive -->
+      Count incrementing by: ${ctx.props.step}
+    </h2>
+    <div class="red">Count is: ${count} and double is: ${double}</div>
+    <button onclick="${inc}">++</button>
+
+    <!-- Of course, we can use other custom elements in here! -->
+    <custom-2></custom-2>
+  </div>`;
+});
 
 // For looping over an array of items, we need to use the list function (directly exported from vanX addon)
 // Items array must be a reactive object.
@@ -75,29 +53,27 @@ const reactiveList = arr => {
   );
 };
 
-defineComponent("custom-2", {
-  // Reactive, directly exported from vanX addon
-  state: reactive({ count: 2 }),
-  items: reactive([
+defineComponent({ tag: "custom-2" }, function (ctx) {
+  const state = reactive({ count: 2 });
+  const items = reactive([
     { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
-  ]),
-  nonReactiveItems: [
+  ]);
+  const nonReactiveItems = [
     { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
-  ],
-  addItem() {
-    this.state.count++;
+  ];
+
+  const addItem = function () {
+    state.count++;
     const newItem = {
-      id: this.state.count,
-      text: `Item num ${this.state.count}`,
+      id: state.count,
+      text: `Item num ${state.count}`,
     };
-    this.items.push(newItem);
-  },
+    items.push(newItem);
+  };
 
-  // If we want the list to work as expected, we must mutate it, it's not enough with reassigning.
-
-  render: ({ state, addItem, items, nonReactiveItems }) => html`<div>
+  return html`<div>
     <!-- For accessing the value of reactive objects and them being reactive, we need to use an arrow function -->
     <h1>Test works! ${() => state.count}</h1>
     <button onclick="${addItem}">Inc reactive</button>
@@ -109,8 +85,39 @@ defineComponent("custom-2", {
     <!-- Here we're using the mapped array. We could do it inline as well -->
     <h2>Reactive list: Items <strong>${() => items.length}</strong></h2>
     <!-- Disclaimer2: if we use the reactiveList property getter, this condition will work
-    until the list is empty. Then, after we add more items, we can see how the number of items
-    is still incrementing and the p has been replaced with the ul, but the list will show empty -->
+  until the list is empty. Then, after we add more items, we can see how the number of items
+  is still incrementing and the p has been replaced with the ul, but the list will show empty -->
     ${() => (items.length > 0 ? reactiveList(items) : html`<p>No items!</p>`)}
-  </div>`,
+  </div>`;
+});
+
+defineComponent({ tag: "custom-3" }, function (ctx) {
+  const { initial_count } = ctx.props;
+  const host = ctx.getHost();
+
+  ctx.onInit(() => console.log(host));
+
+  const count = state(initial_count);
+  return html`
+    <h1>Count is: ${count}</h1>
+    <button
+      onclick="${() => {
+        count.val++;
+        console.log("Host from method!", host);
+      }}"
+    >
+      Inc
+    </button>
+    <div>
+      <custom-4 :name="${count}"></custom-2>
+    </div>
+  `;
+});
+
+defineComponent({ tag: "custom-4", observed: [":name"] }, function (ctx) {
+  const att = state(ctx.props.name);
+  ctx.watch(":name", (n, ov, nv) => (att.val = nv));
+  ctx.onDestroy(() => console.log("Byeeeeee"));
+
+  return html`<h1>Test from changing attribute: ${att}</h1>`;
 });
