@@ -1,18 +1,9 @@
 /// <reference types="./main.d.ts" />
 
-import { isArray } from "./utils";
-
-let txtNodes = arr => {
-  if (!isArray(arr)) {
-    return typeof arr === "string" ? document.createTextNode(arr) : arr;
-  }
-  return arr.map(el =>
-    typeof el == "string" ? document.createTextNode(el) : el
-  );
-};
+import { createElement, isArray } from "./utils";
 
 /**
- * @type {import("./main").DefineComponent}
+ * *@type {import("./main").DefineComponent}
  */
 export let defineComponent = (options, component) => {
   window.customElements.define(
@@ -36,7 +27,7 @@ export let defineComponent = (options, component) => {
         }
       }
       static get observedAttributes() {
-        return [options.observed];
+        return options.observed;
       }
 
       connectedCallback() {
@@ -48,14 +39,13 @@ export let defineComponent = (options, component) => {
         });
 
         this.ctx["props"] = temp;
-        let content = txtNodes(component(this.ctx));
-
+        let content = component(this.ctx);
         let root = this.shadowRoot ?? this;
 
         if (isArray(content)) {
-          content.forEach(el => root.appendChild(el));
+          content.forEach(el => root.appendChild(createElement(el)));
         } else {
-          root.appendChild(content);
+          root.appendChild(createElement(content));
         }
 
         this.ctx.onInit();

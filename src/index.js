@@ -1,6 +1,6 @@
 /// <reference path="./main.d.ts" />
 import { defineComponent } from "./apa";
 import { html } from "./html";
-import { state, derive, reactive, list } from "./van";
+import { stream, derive } from "./stream";
 
-export { html, state, derive, defineComponent, reactive, list };
+export { html, defineComponent, stream, derive };
