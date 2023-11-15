@@ -1,6 +1,6 @@
 /// <reference types="./main.d.ts" />
 
-import { createElement, isArray } from "./utils";
+import { isArray, append } from "./utils";
 
 /**
  * *@type {import("./main").DefineComponent}
@@ -15,7 +15,7 @@ export let defineComponent = (options, component) => {
           onInit: (cb = () => {}) => cb(),
           onDestroy: (cb = () => {}) => cb(),
           subscribers: [],
-          getHost: () => this,
+          host: this,
           watch: (name, cb) =>
             this.ctx.subscribers.push({
               attributeName: name,
@@ -42,11 +42,8 @@ export let defineComponent = (options, component) => {
         let content = component(this.ctx);
         let root = this.shadowRoot ?? this;
 
-        if (isArray(content)) {
-          content.forEach(el => root.appendChild(createElement(el)));
-        } else {
-          root.appendChild(createElement(content));
-        }
+        // this will work with vanJS as a pragma as well
+        append(root, content);
 
         this.ctx.onInit();
       }
