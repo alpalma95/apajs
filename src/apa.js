@@ -12,8 +12,8 @@ export let defineComponent = (options, component) => {
       constructor() {
         super();
         this.ctx = {
-          onInit: (cb = () => {}) => cb(),
-          onDestroy: (cb = () => {}) => cb(),
+          onInit: root => {},
+          onDestroy: () => {},
           subscribers: [],
           host: this,
           watch: (name, cb) =>
@@ -45,7 +45,7 @@ export let defineComponent = (options, component) => {
         // this will work with vanJS as a pragma as well
         append(root, content);
 
-        this.ctx.onInit();
+        this.ctx.onInit(root);
       }
       attributeChangedCallback(n, ov, nv) {
         this.ctx.subscribers.forEach(({ attributeName, cb }) => {

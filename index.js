@@ -12,6 +12,11 @@ defineComponent({ tag: "custom-1", shadow: "open" }, function (ctx) {
     console.log("yes");
   };
 
+  ctx.onInit = h => {
+    console.log(h.querySelector("h2"));
+    console.log(ctx.host.shadowRoot.querySelector("h2"));
+  };
+
   return html`
     <div>
       <h2 style="color: red;">
