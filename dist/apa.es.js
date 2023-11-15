@@ -1,6 +1,6 @@
-let { isArray: b } = Array, { fromEntries: g, entries: a, keys: w } = Object, l = (o, s) => {
-  b(s) ? s.forEach(
-    (r) => typeof r == "string" ? o.appendChild(document.createTextNode(r)) : o.appendChild(r)
+let { isArray: l } = Array, { fromEntries: E, entries: a, keys: w } = Object, m = (o, s) => {
+  l(s) ? s.forEach(
+    (c) => typeof c == "string" ? o.appendChild(document.createTextNode(c)) : o.appendChild(c)
   ) : o.appendChild(
     typeof s == "string" ? document.createTextNode(s) : s
   );
@@ -10,33 +10,28 @@ let { isArray: b } = Array, { fromEntries: g, entries: a, keys: w } = Object, l 
     class extends HTMLElement {
       constructor() {
         super(), this.ctx = {
-          onInit: (r = () => {
-          }) => r(),
-          onDestroy: (r = () => {
-          }) => r(),
-          subscribers: [],
+          onInit: (c) => {
+          },
+          onDestroy: () => {
+          },
           host: this,
-          watch: (r, i) => this.ctx.subscribers.push({
-            attributeName: r,
-            cb: i
-          })
+          watch: (c, r, t) => {
+          }
         }, o.shadow && this.attachShadow({ mode: o.shadow });
       }
       static get observedAttributes() {
         return o.observed;
       }
       connectedCallback() {
-        let r = {};
+        let c = {};
         this.getAttributeNames().forEach((e) => {
-          e.startsWith(":") && (r[e.slice(1)] = this.getAttribute(e));
-        }), this.ctx.props = r;
-        let i = s(this.ctx), t = this.shadowRoot ?? this;
-        l(t, i), this.ctx.onInit();
+          e.startsWith(":") && (c[e.slice(1)] = this.getAttribute(e));
+        }), this.ctx.props = c;
+        let r = s(this.ctx), t = this.shadowRoot ?? this;
+        m(t, r), this.ctx.onInit(t);
       }
-      attributeChangedCallback(r, i, t) {
-        this.ctx.subscribers.forEach(({ attributeName: e, cb: c }) => {
-          r === e && c(r, i, t);
-        });
+      attributeChangedCallback(c, r, t) {
+        this.ctx.watch(c, r, t);
       }
       disconnectedCallback() {
         this.ctx.onDestroy();
@@ -44,59 +39,59 @@ let { isArray: b } = Array, { fromEntries: g, entries: a, keys: w } = Object, l 
     }
   );
 };
-function m(o) {
-  for (var s, r, i = arguments, t = 1, e = "", c = "", n = [0], f = function(d) {
-    t === 1 && (d || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? n.push(d ? i[d] : e) : t === 3 && (d || e) ? (n[1] = d ? i[d] : e, t = 2) : t === 2 && e === "..." && d ? n[2] = Object.assign(n[2] || {}, i[d]) : t === 2 && e && !d ? (n[2] = n[2] || {})[e] = !0 : t >= 5 && (t === 5 ? ((n[2] = n[2] || {})[r] = d ? e ? e + i[d] : i[d] : e, t = 6) : (d || e) && (n[2][r] += d ? e + i[d] : e)), e = "";
+function b(o) {
+  for (var s, c, r = arguments, t = 1, e = "", d = "", n = [0], f = function(i) {
+    t === 1 && (i || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? n.push(i ? r[i] : e) : t === 3 && (i || e) ? (n[1] = i ? r[i] : e, t = 2) : t === 2 && e === "..." && i ? n[2] = Object.assign(n[2] || {}, r[i]) : t === 2 && e && !i ? (n[2] = n[2] || {})[e] = !0 : t >= 5 && (t === 5 ? ((n[2] = n[2] || {})[c] = i ? e ? e + r[i] : r[i] : e, t = 6) : (i || e) && (n[2][c] += i ? e + r[i] : e)), e = "";
   }, u = 0; u < o.length; u++) {
     u && (t === 1 && f(), f(u));
     for (var h = 0; h < o[u].length; h++)
-      s = o[u][h], t === 1 ? s === "<" ? (f(), n = [n, "", null], t = 3) : e += s : t === 4 ? e === "--" && s === ">" ? (t = 1, e = "") : e = s + e[0] : c ? s === c ? c = "" : e += s : s === '"' || s === "'" ? c = s : s === ">" ? (f(), t = 1) : t && (s === "=" ? (t = 5, r = e, e = "") : s === "/" && (t < 5 || o[u][h + 1] === ">") ? (f(), t === 3 && (n = n[0]), t = n, (n = n[0]).push(this.apply(null, t.slice(1))), t = 0) : s === " " || s === "	" || s === `
+      s = o[u][h], t === 1 ? s === "<" ? (f(), n = [n, "", null], t = 3) : e += s : t === 4 ? e === "--" && s === ">" ? (t = 1, e = "") : e = s + e[0] : d ? s === d ? d = "" : e += s : s === '"' || s === "'" ? d = s : s === ">" ? (f(), t = 1) : t && (s === "=" ? (t = 5, c = e, e = "") : s === "/" && (t < 5 || o[u][h + 1] === ">") ? (f(), t === 3 && (n = n[0]), t = n, (n = n[0]).push(this.apply(null, t.slice(1))), t = 0) : s === " " || s === "	" || s === `
 ` || s === "\r" ? (f(), t = 2) : e += s), t === 3 && e === "!--" && (t = 4, n = n[0]);
   }
   return f(), n.length > 2 ? n.slice(1) : n[1];
 }
-function y(o, s, ...r) {
-  const i = document.createElement(o);
+function y(o, s, ...c) {
+  const r = document.createElement(o);
   if (s)
     for (const [t, e] of a(s))
-      t.startsWith("on-") ? i.addEventListener(t.slice(3), e) : i.setAttribute(t, e);
-  return r && r.forEach((t) => {
-    if (b(t)) {
-      t.forEach((e) => l(i, e));
+      t.startsWith("on-") ? r.addEventListener(t.slice(3), e) : r.setAttribute(t, e);
+  return c && c.forEach((t) => {
+    if (l(t)) {
+      t.forEach((e) => m(r, e));
       return;
     }
     if (typeof t != "object") {
       const e = document.createTextNode(t);
-      i.appendChild(e);
+      r.appendChild(e);
       return;
     }
-    i.appendChild(t);
-  }), i;
+    r.appendChild(t);
+  }), r;
 }
-const j = m.bind(y);
-let p = null, x = (o) => (p = o, o()), E = (o) => {
-  let s = /* @__PURE__ */ new Set(), r = () => {
+const v = b.bind(y);
+let p = null, x = (o) => (p = o, o()), g = (o) => {
+  let s = /* @__PURE__ */ new Set(), c = () => {
     p !== null && (s.add(p), p = null);
-  }, i = () => {
+  }, r = () => {
     s.forEach((e) => e());
   }, t = typeof o == "object" ? Object.fromEntries(
-    Object.entries(o).map(([e, c]) => [
+    Object.entries(o).map(([e, d]) => [
       e,
-      typeof c == "object" ? E(c) : c
+      typeof d == "object" ? g(d) : d
     ])
   ) : typeof o == "function" ? { val: x(() => o) } : { val: o };
   return new Proxy(t, {
-    get(e, c) {
-      return r(), typeof e[c] == "function" ? e[c]() : e[c];
+    get(e, d) {
+      return c(), typeof e[d] == "function" ? e[d]() : e[d];
     },
-    set(e, c, n) {
-      return e[c] = n, i(), !0;
+    set(e, d, n) {
+      return e[d] = n, r(), !0;
     }
   });
 };
 export {
   C as defineComponent,
   x as derive,
-  j as html,
-  E as stream
+  v as html,
+  g as stream
 };
