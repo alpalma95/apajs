@@ -53,12 +53,10 @@ defineComponent({ tag: "custom-2" }, function (ctx) {
 defineComponent({ tag: "custom-3" }, function (ctx) {
   const { initial_count } = ctx.props;
   const host = ctx.host;
-
   ctx.onInit(() => console.log(host));
 
   const count = initial_count;
   return html`
-
     <h1>Count is: ${count}</h1>
     <button
       on-click="${() => {

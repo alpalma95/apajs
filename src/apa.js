@@ -1,6 +1,6 @@
 /// <reference types="./main.d.ts" />
 
-import { isArray, append } from "./utils";
+import { append } from "./utils";
 
 /**
  * *@type {import("./main").DefineComponent}
