@@ -14,13 +14,8 @@ export let defineComponent = (options, component) => {
         this.ctx = {
           onInit: root => {},
           onDestroy: () => {},
-          subscribers: [],
           host: this,
-          watch: (name, cb) =>
-            this.ctx.subscribers.push({
-              attributeName: name,
-              cb: cb,
-            }),
+          watch: (n, ov, nv) => {},
         };
         if (options.shadow) {
           this.attachShadow({ mode: options.shadow });
@@ -45,12 +40,13 @@ export let defineComponent = (options, component) => {
         // this will work with vanJS as a pragma as well
         append(root, content);
 
+        // even though root is also accessible from ctx.host, it might be too verbose
+        // if we want to do any query selector on init. It takes literally one word
+        // and it makes query selector much easier in the component.
         this.ctx.onInit(root);
       }
       attributeChangedCallback(n, ov, nv) {
-        this.ctx.subscribers.forEach(({ attributeName, cb }) => {
-          if (n === attributeName) cb(n, ov, nv);
-        });
+        this.ctx.watch(n, ov, nv);
       }
       disconnectedCallback() {
         this.ctx.onDestroy();

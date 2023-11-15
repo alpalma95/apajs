@@ -12,8 +12,9 @@ defineComponent({ tag: "custom-1", shadow: "open" }, function (ctx) {
     console.log("yes");
   };
 
-  ctx.onInit = h => {
-    console.log(h.querySelector("h2"));
+  // Kind of if like this was a class, we "override" the default onInit method.
+  ctx.onInit = root => {
+    console.log(root.querySelector("h2"));
     console.log(ctx.host.shadowRoot.querySelector("h2"));
   };
 
@@ -57,30 +58,36 @@ defineComponent({ tag: "custom-2" }, function (ctx) {
 
 defineComponent({ tag: "custom-3" }, function (ctx) {
   const { initial_count } = ctx.props;
-  const host = ctx.host;
-  ctx.onInit(() => console.log(host));
+  let count = initial_count;
 
-  const count = initial_count;
   return html`
-    <h1>Count is: ${count}</h1>
+    <h1>Count is: <span data-id="count">${count}</span></h1>
     <button
       on-click="${() => {
-        console.log("Host from method!", host);
+        count++;
+
+        // when implementing streams this logic will be outside the event handler
+        ctx.host.querySelector("custom-4").setAttribute(":name", count);
+        ctx.host.querySelector("[data-id='count']").textContent = count;
       }}"
     >
       Inc
     </button>
     <div>
-      <custom-4 :name="2"></custom-2>
+      <custom-4 :name="${count}"></custom-2>
     </div>
   `;
 });
 
 defineComponent({ tag: "custom-4", observed: [":name"] }, function (ctx) {
-  const att = ctx.props.name;
-  ctx.watch(":name", (n, ov, nv) => (att = nv));
+  let att = ctx.props.name;
+  ctx.watch = (n, ov, nv) => {
+    if (n == ":name") {
+      // doing it like this so later we can test streams
+      att = nv;
+      ctx.host.querySelector("span").textContent = att;
+    }
+  };
 
-  // ctx.onDestroy(() => console.log("Byeeeeee"));
-
-  return html`<h1>Test from changing attribute: ${att}</h1>`;
+  return html`<h1>Test from changing attribute: <span>${att}</span></h1>`;
 });
