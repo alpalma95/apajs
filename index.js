@@ -1,21 +1,29 @@
-import { defineComponent } from "./src";
+import { define } from "./src";
 import { html } from "./src";
 
-defineComponent({ tag: "custom-1", shadow: "open" }, function (ctx) {
+define({ tag: "custom-1", shadow: "open" }, function (ctx) {
   let count = 3;
   let double = count * 2;
   const test = "blaaaa test";
 
   const step = +ctx.props.step;
   const inc = () => {
+    // Will be simplified later with streams
     count += step;
-    console.log("yes");
+    ctx.host.shadowRoot.querySelector("div.red > span").textContent = count;
+    double = count * 2;
+    ctx.host.shadowRoot.querySelector('div [data-id="double"]').textContent =
+      double;
   };
 
   // Kind of if like this was a class, we "override" the default onInit method.
   ctx.onInit = root => {
     console.log(root.querySelector("h2"));
-    console.log(ctx.host.shadowRoot.querySelector("h2"));
+
+    // Because content projected from slot is not technically inside the shadow root,
+    // but projected in it. For query selecting it, we must use the light root of the
+    // custom element.
+    ctx.host.querySelector("[data-id]").addEventListener("click", inc);
   };
 
   return html`
@@ -23,15 +31,20 @@ defineComponent({ tag: "custom-1", shadow: "open" }, function (ctx) {
       <h2 style="color: red;">
         Count incrementing by: ${ctx.props.step} ${test.toUpperCase()}
       </h2>
-      <div class="red">Count is: ${count} and double is: ${double}</div>
+      <div class="red">
+        Count is: <span>${count}</span> and double is:
+        <span data-id="double">${double}</span>
+      </div>
       <button on-click="${inc}">++</button>
+      <slot></slot>
+
       <custom-2></custom-2>
     </div>
     <div>saf</div>
   `;
 });
 
-defineComponent({ tag: "custom-2" }, function (ctx) {
+define({ tag: "custom-2" }, function (ctx) {
   const state = { count: 2 };
   const items = [
     { id: 1, text: "Item 1" },
@@ -56,7 +69,7 @@ defineComponent({ tag: "custom-2" }, function (ctx) {
   </div>`;
 });
 
-defineComponent({ tag: "custom-3" }, function (ctx) {
+define({ tag: "custom-3" }, function (ctx) {
   const { initial_count } = ctx.props;
   let count = initial_count;
 
@@ -79,7 +92,7 @@ defineComponent({ tag: "custom-3" }, function (ctx) {
   `;
 });
 
-defineComponent({ tag: "custom-4", observed: [":name"] }, function (ctx) {
+define({ tag: "custom-4", observed: [":name"] }, function (ctx) {
   let att = ctx.props.name;
   ctx.watch = (n, ov, nv) => {
     if (n == ":name") {

@@ -5,7 +5,7 @@ import { append } from "./utils";
 /**
  * *@type {import("./main").DefineComponent}
  */
-export let defineComponent = (options, component) => {
+export let define = (options, component) => {
   window.customElements.define(
     options.tag,
     class extends HTMLElement {
