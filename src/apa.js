@@ -1,5 +1,6 @@
 /// <reference types="./main.d.ts" />
 
+import { hydrate } from "./html";
 import { append } from "./utils";
 
 /**
@@ -15,6 +16,8 @@ export let define = (options, component) => {
           onInit: root => {},
           onDestroy: () => {},
           host: this,
+          $refs: {},
+          handlers: {},
           watch: (n, ov, nv) => {},
         };
         if (options.shadow) {
@@ -34,11 +37,13 @@ export let define = (options, component) => {
         });
 
         this.ctx["props"] = temp;
+        this.ctx["handlers"] = {};
         let content = component(this.ctx);
         let root = this.shadowRoot ?? this;
 
         // this will work with vanJS as a pragma as well
         append(root, content);
+        hydrate(this, this.ctx);
 
         // even though root is also accessible from ctx.host, it might be too verbose
         // if we want to do any query selector on init. It takes literally one word
