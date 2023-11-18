@@ -1,97 +1,116 @@
-let { isArray: l } = Array, { fromEntries: E, entries: a, keys: w } = Object, m = (o, s) => {
-  l(s) ? s.forEach(
-    (c) => typeof c == "string" ? o.appendChild(document.createTextNode(c)) : o.appendChild(c)
-  ) : o.appendChild(
+let N = (e, ...s) => {
+  let r = e.reduce(
+    (i, a, h) => i + a + (s[h] ?? ""),
+    ""
+  ), t = [...new DOMParser().parseFromString(r, "text/html").body.childNodes];
+  return t.length === 1 ? t[0] : t;
+}, c = (e, s) => {
+  let [r, n] = e.split("|");
+  return [
+    r.trim(),
+    n == null ? void 0 : n.split(",").map((l) => {
+      let t = l.trim();
+      if (/^\'|^\"|^\`/.test(t) || t === "$event")
+        return t === "$event" ? t : t.slice(1, -1);
+      try {
+        return JSON.parse(t);
+      } catch {
+        return s[t];
+      }
+    })
+  ];
+}, u = (e, s, r) => {
+  let [n, l] = c(s.getAttribute(e));
+  if (!n in r.handlers)
+    return;
+  let t = r.handlers[n], i = e.slice(1);
+  l ? s.addEventListener(
+    i,
+    (a) => l.at(0) === "$event" ? t(a, ...l.slice(1)) : t(...l)
+  ) : s.addEventListener(i, t);
+}, f = (e, s) => {
+  let r = e.getAttribute("ref");
+  r && (r in s.$refs ? s.$refs[r] = [s.$refs[r], e].flat(1 / 0) : s.$refs[r] = e);
+}, o = (e, s) => {
+  if (!e)
+    return;
+  const r = document.createTreeWalker(e, NodeFilter.SHOW_ELEMENT, {
+    /** @param {HTMLElement} node */
+    acceptNode(l) {
+      return l.getAttributeNames().some((t) => t.startsWith("@") || t === "ref") ? NodeFilter.FILTER_ACCEPT : l.tagName.includes("-") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP;
+    }
+  });
+  let n = r.currentNode;
+  for (; n = r.nextNode(); )
+    n.getAttributeNames().filter((l) => l.startsWith("@") || l === "ref").forEach((l) => {
+      u(l, n, s), f(n, s);
+    });
+  e.shadowRoot !== null && o(e.shadowRoot, s);
+}, { isArray: p } = Array, m = (e, s) => {
+  p(s) ? s.forEach(
+    (r) => typeof r == "string" ? e.appendChild(document.createTextNode(r)) : e.appendChild(r)
+  ) : e.appendChild(
     typeof s == "string" ? document.createTextNode(s) : s
   );
-}, C = (o, s) => {
+}, y = (e, s) => {
   window.customElements.define(
-    o.tag,
+    e.tag,
     class extends HTMLElement {
       constructor() {
         super(), this.ctx = {
-          onInit: (c) => {
+          onInit: (r) => {
           },
           onDestroy: () => {
           },
           host: this,
-          watch: (c, r, t) => {
+          $refs: {},
+          handlers: {},
+          watch: (r, n, l) => {
           }
-        }, o.shadow && this.attachShadow({ mode: o.shadow });
+        }, e.shadow && this.attachShadow({ mode: e.shadow });
       }
       static get observedAttributes() {
-        return o.observed;
+        return e.observed;
       }
       connectedCallback() {
-        let c = {};
-        this.getAttributeNames().forEach((e) => {
-          e.startsWith(":") && (c[e.slice(1)] = this.getAttribute(e));
-        }), this.ctx.props = c;
-        let r = s(this.ctx), t = this.shadowRoot ?? this;
-        m(t, r), this.ctx.onInit(t);
+        let r = {};
+        this.getAttributeNames().forEach((t) => {
+          t.startsWith(":") && (r[t.slice(1)] = this.getAttribute(t));
+        }), this.ctx.props = r, this.ctx.handlers = {};
+        let n = s(this.ctx), l = this.shadowRoot ?? this;
+        m(l, n), o(this, this.ctx), this.ctx.onInit(l);
       }
-      attributeChangedCallback(c, r, t) {
-        this.ctx.watch(c, r, t);
+      attributeChangedCallback(r, n, l) {
+        this.ctx.watch(r, n, l);
       }
       disconnectedCallback() {
         this.ctx.onDestroy();
       }
     }
   );
-};
-function b(o) {
-  for (var s, c, r = arguments, t = 1, e = "", d = "", n = [0], f = function(i) {
-    t === 1 && (i || (e = e.replace(/^\s*\n\s*|\s*\n\s*$/g, ""))) ? n.push(i ? r[i] : e) : t === 3 && (i || e) ? (n[1] = i ? r[i] : e, t = 2) : t === 2 && e === "..." && i ? n[2] = Object.assign(n[2] || {}, r[i]) : t === 2 && e && !i ? (n[2] = n[2] || {})[e] = !0 : t >= 5 && (t === 5 ? ((n[2] = n[2] || {})[c] = i ? e ? e + r[i] : r[i] : e, t = 6) : (i || e) && (n[2][c] += i ? e + r[i] : e)), e = "";
-  }, u = 0; u < o.length; u++) {
-    u && (t === 1 && f(), f(u));
-    for (var h = 0; h < o[u].length; h++)
-      s = o[u][h], t === 1 ? s === "<" ? (f(), n = [n, "", null], t = 3) : e += s : t === 4 ? e === "--" && s === ">" ? (t = 1, e = "") : e = s + e[0] : d ? s === d ? d = "" : e += s : s === '"' || s === "'" ? d = s : s === ">" ? (f(), t = 1) : t && (s === "=" ? (t = 5, c = e, e = "") : s === "/" && (t < 5 || o[u][h + 1] === ">") ? (f(), t === 3 && (n = n[0]), t = n, (n = n[0]).push(this.apply(null, t.slice(1))), t = 0) : s === " " || s === "	" || s === `
-` || s === "\r" ? (f(), t = 2) : e += s), t === 3 && e === "!--" && (t = 4, n = n[0]);
-  }
-  return f(), n.length > 2 ? n.slice(1) : n[1];
-}
-function y(o, s, ...c) {
-  const r = document.createElement(o);
-  if (s)
-    for (const [t, e] of a(s))
-      t.startsWith("on-") ? r.addEventListener(t.slice(3), e) : r.setAttribute(t, e);
-  return c && c.forEach((t) => {
-    if (l(t)) {
-      t.forEach((e) => m(r, e));
-      return;
-    }
-    if (typeof t != "object") {
-      const e = document.createTextNode(t);
-      r.appendChild(e);
-      return;
-    }
-    r.appendChild(t);
-  }), r;
-}
-const v = b.bind(y);
-let p = null, x = (o) => (p = o, o()), g = (o) => {
-  let s = /* @__PURE__ */ new Set(), c = () => {
-    p !== null && (s.add(p), p = null);
-  }, r = () => {
-    s.forEach((e) => e());
-  }, t = typeof o == "object" ? Object.fromEntries(
-    Object.entries(o).map(([e, d]) => [
-      e,
-      typeof d == "object" ? g(d) : d
+}, d = null, b = (e) => (d = e, e()), E = (e) => {
+  let s = /* @__PURE__ */ new Set(), r = () => {
+    d !== null && (s.add(d), d = null);
+  }, n = () => {
+    s.forEach((t) => t());
+  }, l = typeof e == "object" ? Object.fromEntries(
+    Object.entries(e).map(([t, i]) => [
+      t,
+      typeof i == "object" ? E(i) : i
     ])
-  ) : typeof o == "function" ? { val: x(() => o) } : { val: o };
-  return new Proxy(t, {
-    get(e, d) {
-      return c(), typeof e[d] == "function" ? e[d]() : e[d];
+  ) : typeof e == "function" ? { val: b(() => e) } : { val: e };
+  return new Proxy(l, {
+    get(t, i) {
+      return r(), typeof t[i] == "function" ? t[i]() : t[i];
     },
-    set(e, d, n) {
-      return e[d] = n, r(), !0;
+    set(t, i, a) {
+      return t[i] = a, n(), !0;
     }
   });
 };
 export {
-  C as defineComponent,
-  x as derive,
-  v as html,
-  g as stream
+  y as define,
+  b as derive,
+  N as html,
+  E as stream
 };
