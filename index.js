@@ -2,18 +2,19 @@ import { define } from "./src";
 import { html } from "./src";
 
 define({ tag: "custom-1", shadow: "open" }, function (ctx) {
+  const { $refs } = ctx;
+
   ctx.onInit = root => {
     /**
      * Equivalent would be (because we're using both shadow
      * and light root for slotted elements):
      *
-     *    root.shadowRoot.querySelector('[ref="count"]').textContent = count
-     *    root.querySelector('[ref="count"]').textContent = count
+     *    [root.querySelector('[ref="count"]').textContent = count,
+     *    ctx.host.querySelector('[ref="count"]').textContent = count]
+     *      .forEach(...)
      */
     $refs.count.forEach(el => (el.textContent = count));
   };
-
-  const { $refs } = ctx;
 
   let count = 3;
   let double = count * 2;
