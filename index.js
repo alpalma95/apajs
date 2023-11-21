@@ -3,15 +3,15 @@ import { html } from "./src";
 
 define({ tag: "custom-1", shadow: "open" }, function (ctx) {
   const { $refs } = ctx;
+  console.log($refs);
 
   ctx.onInit = root => {
     /**
      * Equivalent would be (because we're using both shadow
      * and light root for slotted elements):
      *
-     *    [root.querySelector('[ref="count"]').textContent = count,
-     *    ctx.host.querySelector('[ref="count"]').textContent = count]
-     *      .forEach(...)
+     *    root.querySelector('[ref="count"]').textContent = count,
+     *    ctx.host.querySelector('[ref="count"]').textContent = count
      */
     $refs.count.forEach(el => (el.textContent = count));
   };
@@ -55,11 +55,35 @@ define({ tag: "custom-2" }, function (ctx) {
     { id: 1, text: "Item 1" },
     { id: 2, text: "Item 2" },
   ];
+  let _initial = 3;
+
+  ctx.handlers = {
+    log(e) {
+      console.log(e.target);
+    },
+    add() {
+      ctx.$refs.list.insertAdjacentElement(
+        "beforeend",
+        html`<li @click="log" ref="test_${_initial}">
+          Item ${_initial}: Item ${_initial}
+        </li>`
+      );
+      _initial++;
+
+      if (_initial == 5) console.log(ctx.$refs.test_3);
+    },
+  };
 
   return html`<div>
     <h1>Test works! ${state.count}</h1>
+    <button @click="add">Add item</button>
     <h2>List</h2>
-    ${items.map(item => `<li>Item: ${item.id}: ${item.text}</li>`).join("")}
+    <ul ref="list">
+      ${items.map(
+        item =>
+          html`<li @click="log">Item ${item.id}: ${item.text}</li>`.outerHTML
+      )}
+    </ul>
   </div>`;
 });
 
