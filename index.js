@@ -8,13 +8,6 @@ define({ tag: "custom-1", shadow: "open" }, function (ctx) {
   let double = stream(() => count.val * 2);
 
   ctx.onInit = root => {
-    /**
-     * Equivalent would be (because we're using both shadow
-     * and light root for slotted elements):
-     *
-     *    root.querySelector('[ref="count"]').textContent = count,
-     *    ctx.host.querySelector('[ref="count"]').textContent = count
-     */
     hook(() => {
       $refs.count.forEach(el => (el.textContent = count.val));
     });
