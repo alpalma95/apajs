@@ -1,7 +1,6 @@
 /// <reference types="./main.d.ts" />
 
-import { hydrate, hydrateAsync, observeChildren } from "./hydrationManager";
-import { append } from "./utils";
+import { hydrateAsync, observeChildren } from "./hydrationManager";
 
 /**
  * *@type {import("./main").DefineComponent}
@@ -32,17 +31,20 @@ export let define = (options, component) => {
         let temp = {};
 
         this.getAttributeNames().forEach(attr => {
-          if (!attr.startsWith(":")) return;
-          temp[attr.slice(1)] = this.getAttribute(attr);
+          let value = this.getAttribute(attr);
+          try {
+            temp[attr] = JSON.parse(value);
+          } catch (_) {
+            temp[attr] = value;
+          }
         });
 
         this.ctx["props"] = temp;
         this.ctx["handlers"] = {};
-        let content = component(this.ctx);
-        let root = this.shadowRoot ?? this;
 
-        // this will work with vanJS as a pragma as well
-        append(root, content);
+        let root = this.shadowRoot ?? this;
+        root.innerHTML = component(this.ctx);
+
         (async () => {
           await hydrateAsync(this, this.ctx);
         })();

@@ -54,10 +54,10 @@ let storeRefs = (node, ctx) => {
 let processNode = (node, ctx) => {
   node
     .getAttributeNames()
-    .filter(name => name.startsWith("@") || name === "ref")
+    .filter(name => name.startsWith(":") || name === "ref")
     .forEach(attribute => {
       if (attribute == "ref") storeRefs(node, ctx);
-      if (attribute.startsWith("@")) attachEvents(attribute, node, ctx);
+      if (attribute.startsWith(":")) attachEvents(attribute, node, ctx);
     });
 };
 
@@ -81,7 +81,7 @@ export let observeChildren = element => {
      * In each record we have a target, and we can tell which is the immediate parent
      * custom element.
      * When there's a change in element B, we'll have the callback
-     * triggered twice, once reacting to observerA and another one to observerB.
+     * triggered twice, once intercepted by observerA and intercepted again by observerB.
      * Then, we filter these records. Even though observerA will still observe
      * Element-B, since the record.target doesn't find Element-A as target's closest
      * custom element, it'll be taken out of the array (most likely leaving an
@@ -122,7 +122,7 @@ export let hydrate = (root, ctx) => {
     acceptNode(node) {
       return node
         .getAttributeNames()
-        .some(n => n.startsWith("@") || n === "ref")
+        .some(n => n.startsWith(":") || n === "ref")
         ? NodeFilter.FILTER_ACCEPT
         : node.tagName.includes("-")
         ? NodeFilter.FILTER_REJECT

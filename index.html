@@ -12,11 +12,11 @@
     </style>
   </head>
   <body>
-    <custom-1 :step="3">
+    <custom-1 step="3" test='{"hello":"world"}'>
       <p>Count from slot: <span ref="count">0</span></p>
-      <button data-id="test" @click="inc | 2">From slot + 2</button>
+      <button data-id="test" :click="inc | 2">From slot + 2</button>
     </custom-1>
-    <custom-3 :initial_count="3" :test="jel"></custom-3>
-    <custom-3 :initial_count="0" :test="jel"></custom-3>
+    <custom-3 initial_count="3"></custom-3>
+    <custom-3 initial_count="0"></custom-3>
   </body>
 </html>

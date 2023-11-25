@@ -1,9 +1,11 @@
 import { define } from "./src";
 import { html } from "./src";
+import { stream, hook } from "./src";
 
 define({ tag: "custom-1", shadow: "open" }, function (ctx) {
   const { $refs } = ctx;
-  console.log($refs);
+  let count = stream(3);
+  let double = stream(() => count.val * 2);
 
   ctx.onInit = root => {
     /**
@@ -13,18 +15,14 @@ define({ tag: "custom-1", shadow: "open" }, function (ctx) {
      *    root.querySelector('[ref="count"]').textContent = count,
      *    ctx.host.querySelector('[ref="count"]').textContent = count
      */
-    $refs.count.forEach(el => (el.textContent = count));
+    hook(() => {
+      $refs.count.forEach(el => (el.textContent = count.val));
+    });
+    hook(() => ($refs.double.textContent = double.val));
   };
 
-  let count = 3;
-  let double = count * 2;
-
   const inc = num => {
-    // Will be simplified later with streams
-    count += num;
-    $refs.count.forEach(el => (el.textContent = count));
-    double = count * 2;
-    $refs.double.textContent = double;
+    count.val += num;
   };
 
   ctx.handlers = {
@@ -38,7 +36,7 @@ define({ tag: "custom-1", shadow: "open" }, function (ctx) {
         Count is: <span ref="count">${count}</span> and double is:
         <span ref="double">${double}</span>
       </div>
-      <button @click="inc | ${ctx.props.step}">
+      <button :click="inc | ${ctx.props.step}">
         From component + ${ctx.props.step}
       </button>
       <slot></slot>
@@ -62,9 +60,9 @@ define({ tag: "custom-2" }, function (ctx) {
       console.log(e.target);
     },
     add() {
-      ctx.$refs.list.insertAdjacentElement(
+      ctx.$refs.list.insertAdjacentHTML(
         "beforeend",
-        html`<li @click="log" ref="test_${_initial}">
+        html`<li :click="log" ref="test_${_initial}">
           Item ${_initial}: Item ${_initial}
         </li>`
       );
@@ -76,12 +74,11 @@ define({ tag: "custom-2" }, function (ctx) {
 
   return html`<div>
     <h1>Test works! ${state.count}</h1>
-    <button @click="add">Add item</button>
+    <button :click="add">Add item</button>
     <h2>List</h2>
     <ul ref="list">
       ${items.map(
-        item =>
-          html`<li @click="log">Item ${item.id}: ${item.text}</li>`.outerHTML
+        item => html`<li :click="log">Item ${item.id}: ${item.text}</li>`
       )}
     </ul>
   </div>`;
@@ -100,23 +97,24 @@ define({ tag: "custom-3" }, function (ctx) {
       // when implementing streams this logic will be outside the event handler
       // ctx.host.querySelector("custom-4").setAttribute(":name", count);
       // ctx.host.querySelector("[data-id='count']").textContent = count;
+
       $.text_count.textContent = count;
-      $.attr_count.setAttribute(":name", count);
+      $.attr_count.setAttribute("name", count);
     },
   };
   return html`
     <h1>Count is: <span ref="text_count">${count}</span></h1>
-    <button @click="inc"> Inc </button>
+    <button :click="inc"> Inc </button>
     <div>
-      <custom-4 ref="attr_count" :name="${count}"></custom-2>
+      <custom-4 ref="attr_count" name="${count}"></custom-2>
     </div>
   `;
 });
 
-define({ tag: "custom-4", observed: [":name"] }, function (ctx) {
+define({ tag: "custom-4", observed: ["name"] }, function (ctx) {
   let att = ctx.props.name;
   ctx.watch = (n, ov, nv) => {
-    if (n == ":name") {
+    if (n == "name") {
       // doing it like this so later we can test streams
       att = nv;
       ctx.$refs.name.textContent = att;
