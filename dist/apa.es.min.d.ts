@@ -1,8 +1,3 @@
-// Types for state and derive
-/// <reference types="vanjs-core" />
-// Types for reactive and list
-/// <reference types="vanjs-ext" />
-
 type shadow = "open" | "closed";
 type HTMLElementOrString = HTMLElement | string;
 type props = {

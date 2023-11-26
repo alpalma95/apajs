@@ -1,156 +1,186 @@
-let p = (e, r) => {
-  let [t, n] = e.split("|");
+let m = (t, r) => {
+  let [e, s] = t.split("|");
   return [
-    t.trim(),
-    n == null ? void 0 : n.split(",").map((l) => {
-      let s = l.trim();
-      if (/^\'|^\"|^\`/.test(s) || s === "$event")
-        return s === "$event" ? s : s.slice(1, -1);
+    e.trim(),
+    s == null ? void 0 : s.split(",").map((i) => {
+      let n = i.trim();
+      if (/^\'|^\"|^\`/.test(n) || n === "$event")
+        return n === "$event" ? n : n.slice(1, -1);
       try {
-        return JSON.parse(s);
+        return JSON.parse(n);
       } catch {
-        return r[s];
+        return r[n];
       }
     })
   ];
-}, E = (e, r, t) => {
-  let [n, l] = p(r.getAttribute(e));
-  if (!n in t.handlers)
+}, p = (t, r, e) => {
+  let [s, i] = m(r.getAttribute(t));
+  if (!s in e.handlers)
     return;
-  let s = t.handlers[n], i = e.slice(1);
-  l ? r.addEventListener(
-    i,
-    (a) => l.at(0) === "$event" ? s(a, ...l.slice(1)) : s(...l)
-  ) : r.addEventListener(i, s);
-}, b = (e, r) => {
-  let t = e.getAttribute("ref");
-  if (t)
-    if (t in r.$refs)
-      if (r.$refs[t] instanceof HTMLElement) {
-        let n = r.$refs[t];
-        r.$refs[t] = /* @__PURE__ */ new Set(), r.$refs[t].add(n).add(e);
+  let n = e.handlers[s], a = t.slice(1);
+  i ? r.addEventListener(
+    a,
+    (l) => i.at(0) === "$event" ? n(l, ...i.slice(1)) : n(...i)
+  ) : r.addEventListener(a, n);
+}, w = (t, r) => {
+  let e = t.getAttribute("ref");
+  if (e)
+    if (e in r.$refs)
+      if (r.$refs[e] instanceof HTMLElement) {
+        let s = r.$refs[e];
+        r.$refs[e] = /* @__PURE__ */ new Set(), r.$refs[e].add(s).add(t);
       } else
-        r.$refs[t].add(e);
+        r.$refs[e].add(t);
     else
-      r.$refs[t] = e;
-}, o = (e, r) => {
-  e.getAttributeNames().filter((t) => t.startsWith("@") || t === "ref").forEach((t) => {
-    t == "ref" && b(e, r), t.startsWith("@") && E(t, e, r);
+      r.$refs[e] = t;
+}, b = (t, r) => {
+  let e = t.getAttribute("ref");
+  r.$refs[e] instanceof Set ? r.$refs[e].delete(t) : delete r.$refs[e];
+}, c = (t, r) => {
+  t.getAttributeNames().filter((e) => e.startsWith(":") || e === "ref").forEach((e) => {
+    e == "ref" && w(t, r), e.startsWith(":") && p(e, t, r);
   });
-}, w = (e) => {
-  let r = e.parentElement;
+}, E = (t) => {
+  let r = t.parentElement;
   for (; (r = r.parentElement) && !r.tagName.includes("-"); )
     ;
   return r;
-}, N = (e) => {
-  let r = (t) => {
-    t.filter(
-      (l) => w(l.target) == e
-    ).forEach((l) => {
-      if (l.type !== "childList")
+}, N = (t) => {
+  let r = (e) => {
+    e.filter(
+      (i) => E(i.target) == t
+    ).forEach((i) => {
+      if (i.type !== "childList")
         return;
-      let { addedNodes: s } = l;
-      s.length && s.forEach(async (i) => {
-        i.tagName && (o(i, e.ctx), i.childNodes.length > 0 && await c(i, e.ctx));
+      let { addedNodes: n, removedNodes: a } = i;
+      a.length && a.forEach((l) => {
+        !l.tagName || !l.getAttribute("ref") || b(l, t.ctx);
+      }), n.length && n.forEach(async (l) => {
+        l.tagName && (c(l, t.ctx), l.childNodes.length > 0 && await u(l, t.ctx));
       });
     });
   };
-  return new Promise((t) => {
-    t(new MutationObserver(r));
+  return new Promise((e) => {
+    e(new MutationObserver(r));
   });
-}, h = (e, r) => {
-  if (!e)
+}, d = (t, r) => {
+  if (!t)
     return;
-  const t = document.createTreeWalker(e, NodeFilter.SHOW_ELEMENT, {
+  const e = document.createTreeWalker(t, NodeFilter.SHOW_ELEMENT, {
     /** @param {HTMLElement} node */
-    acceptNode(l) {
-      return l.getAttributeNames().some((s) => s.startsWith("@") || s === "ref") ? NodeFilter.FILTER_ACCEPT : l.tagName.includes("-") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP;
+    acceptNode(i) {
+      return i.getAttributeNames().some((n) => n.startsWith(":") || n === "ref") ? NodeFilter.FILTER_ACCEPT : i.tagName.includes("-") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP;
     }
   });
-  let n = t.currentNode;
-  for (; n = t.nextNode(); )
-    o(n, r);
-  e.shadowRoot !== null && h(e.shadowRoot, r);
-}, c = (e, r) => new Promise((t) => {
-  h(e, r), t();
-}), { isArray: f } = Array, y = (e, r) => {
-  f(r) ? r.forEach(
-    (t) => typeof t == "string" ? e.appendChild(document.createTextNode(t)) : e.appendChild(t)
-  ) : e.appendChild(
-    typeof r == "string" ? document.createTextNode(r) : r
-  );
-}, A = (e, r) => {
+  let s = e.currentNode;
+  for (; s = e.nextNode(); )
+    c(s, r);
+  t.shadowRoot !== null && d(t.shadowRoot, r);
+}, u = (t, r) => new Promise((e) => {
+  d(t, r), e();
+}), L = (t, r) => {
   window.customElements.define(
-    e.tag,
+    t.tag,
     class extends HTMLElement {
       constructor() {
         super(), this.ctx = {
-          onInit: (t) => {
+          onInit: (e) => {
           },
           onDestroy: () => {
           },
           host: this,
           $refs: {},
           handlers: {},
-          watch: (t, n, l) => {
+          watch: (e, s, i) => {
           }
-        }, e.shadow && this.attachShadow({ mode: e.shadow });
+        }, t.shadow && (this.shadow = this.attachShadow({ mode: t.shadow })), typeof t.onConstruct == "function" && t.onConstruct(this);
       }
       static get observedAttributes() {
-        return e.observed;
+        return t.observed;
       }
       connectedCallback() {
-        let t = {};
-        this.getAttributeNames().forEach((i) => {
-          i.startsWith(":") && (t[i.slice(1)] = this.getAttribute(i));
-        }), this.ctx.props = t, this.ctx.handlers = {};
-        let n = r(this.ctx), l = this.shadowRoot ?? this;
-        y(l, n), (async () => await c(this, this.ctx))(), this.ctx.onInit(l);
-        let s = {
+        let e = {};
+        this.getAttributeNames().forEach((n) => {
+          let a = this.getAttribute(n);
+          try {
+            e[n] = JSON.parse(a);
+          } catch {
+            e[n] = a;
+          }
+        }), this.ctx.props = e, this.ctx.handlers = {};
+        let s = this.shadowRoot ?? this;
+        s.innerHTML = r(this.ctx), (async () => await u(this, this.ctx))();
+        let i = {
           childList: !0,
           subtree: !0
         };
-        N(this).then((i) => {
-          this.shadowRoot && i.observe(this.shadowRoot, s), i.observe(this, s);
+        N(this).then((n) => {
+          this.shadowRoot && n.observe(this.shadowRoot, i), n.observe(this, i), this.ctx.onInit(s);
         });
       }
-      attributeChangedCallback(t, n, l) {
-        this.ctx.watch(t, n, l);
+      attributeChangedCallback(e, s, i) {
+        this.ctx.watch(e, s, i);
       }
       disconnectedCallback() {
         this.ctx.onDestroy();
       }
     }
   );
-}, C = (e, ...r) => {
-  let t = r.map((a) => a instanceof HTMLElement ? a.outerHTML : f(a) ? a.join(" ") : a), n = e.reduce(
-    (a, u, m) => a + u + (t[m] ?? ""),
+}, { isArray: g } = Array, T = (t, ...r) => {
+  let e = r.map((s) => s instanceof HTMLElement ? s.outerHTML : g(s) ? s.join(" ") : s);
+  return t.reduce(
+    (s, i, n) => s + i + (e[n] ?? ""),
     ""
-  ), i = [...new DOMParser().parseFromString(n, "text/html").body.childNodes];
-  return i.length === 1 ? i[0] : i;
-}, d = null, g = (e) => (d = e, e()), v = (e) => {
-  let r = /* @__PURE__ */ new Set(), t = () => {
-    d !== null && (r.add(d), d = null);
-  }, n = () => {
-    r.forEach((s) => s());
-  }, l = typeof e == "object" ? Object.fromEntries(
-    Object.entries(e).map(([s, i]) => [
-      s,
-      typeof i == "object" ? v(i) : i
-    ])
-  ) : typeof e == "function" ? { val: g(() => e) } : { val: e };
-  return new Proxy(l, {
-    get(s, i) {
-      return t(), typeof s[i] == "function" ? s[i]() : s[i];
+  );
+}, f = null, o = /* @__PURE__ */ new WeakMap();
+class y {
+  constructor(r) {
+    this.cb = r, this._set = /* @__PURE__ */ new Set();
+  }
+  unhook() {
+    this._set.forEach((r) => r.delete(this));
+  }
+}
+let A = (t) => {
+  f = new y(t), f.cb();
+  let r = f;
+  return f = null, r;
+}, R = (t, r) => {
+  if (f === null)
+    return;
+  let e;
+  o.has(t) ? e = o.get(t).get(r) : o.set(t, /* @__PURE__ */ new Map([[r, e = /* @__PURE__ */ new Set()]])), f._set.add(e), e.add(f);
+}, $ = (t, r) => {
+  if (!o.get(t))
+    return;
+  o.get(t).get(r).forEach(({ cb: s }) => s());
+}, C = (t) => {
+  if (Array.isArray(t) || typeof t != "function" && typeof t != "object")
+    return { val: t };
+  if (typeof t == "function") {
+    let r = h(1);
+    return A(() => r.val = t()), r;
+  } else
+    return Object.fromEntries(
+      Object.entries(t).map(([r, e]) => [
+        r,
+        typeof e == "object" || typeof e == "function" ? h(e) : e
+      ])
+    );
+}, h = (t) => {
+  let r = C(t);
+  return new Proxy(r, {
+    get(e, s, i) {
+      return R(e, s), Reflect.get(e, s, i);
     },
-    set(s, i, a) {
-      return s[i] = a, n(), !0;
+    set(e, s, i, n) {
+      return e[s] !== i && (Reflect.set(e, s, i, n), $(e, s)), !0;
     }
   });
 };
 export {
-  A as define,
-  g as derive,
-  C as html,
-  v as stream
+  L as define,
+  A as hook,
+  T as html,
+  h as stream
 };
