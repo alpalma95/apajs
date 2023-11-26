@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script defer type="module" src="./index.js"></script>
-    <style>
-      .red {
-        color: red;
-      }
-    </style>
   </head>
   <body>
-    <custom-1 step="3" test='{"hello":"world"}'>
-      <p>Count from slot: <span ref="count">0</span></p>
-      <button data-id="test" :click="inc | 2">From slot + 2</button>
-    </custom-1>
-    <custom-3 initial_count="3"></custom-3>
-    <custom-3 initial_count="0"></custom-3>
+    <div class="container mx-auto px-2 py-5">
+      <custom-1 step="3" test='{"hello":"world"}'>
+        <p>Count from slot: <span ref="count">0</span></p>
+        <button
+          class="rounded bg-blue-200 px-4 py-2 my-2 font-semibold"
+          data-id="test"
+          :click="inc | 2"
+        >
+          From slot + 2
+        </button>
+      </custom-1>
+      <custom-3 initial_count="3"></custom-3>
+      <custom-3 initial_count="0"></custom-3>
+    </div>
   </body>
 </html>

@@ -51,6 +51,15 @@ let storeRefs = (node, ctx) => {
   }
 };
 
+let cleanupRefs = (node, ctx) => {
+  let refName = node.getAttribute("ref");
+  if (ctx.$refs[refName] instanceof Set) {
+    ctx.$refs[refName].delete(node);
+  } else {
+    delete ctx.$refs[refName];
+  }
+};
+
 let processNode = (node, ctx) => {
   node
     .getAttributeNames()
@@ -94,7 +103,14 @@ export let observeChildren = element => {
     filteredRecords.forEach(record => {
       // We're only interested in observing nodes getting in and out of the DOM
       if (record.type !== "childList") return;
-      let { addedNodes } = record;
+      let { addedNodes, removedNodes } = record;
+
+      // We need to cleanup before adding again
+      if (removedNodes.length)
+        removedNodes.forEach(node => {
+          if (!node.tagName || !node.getAttribute("ref")) return;
+          cleanupRefs(node, element.ctx);
+        });
       if (addedNodes.length)
         addedNodes.forEach(async node => {
           if (!node.tagName) return;

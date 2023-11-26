@@ -11,6 +11,7 @@ export let define = (options, component) => {
     class extends HTMLElement {
       constructor() {
         super();
+
         this.ctx = {
           onInit: root => {},
           onDestroy: () => {},
@@ -20,8 +21,10 @@ export let define = (options, component) => {
           watch: (n, ov, nv) => {},
         };
         if (options.shadow) {
-          this.attachShadow({ mode: options.shadow });
+          this.shadow = this.attachShadow({ mode: options.shadow });
         }
+        if (typeof options.onConstruct === "function")
+          options.onConstruct(this);
       }
       static get observedAttributes() {
         return options.observed;
@@ -49,11 +52,6 @@ export let define = (options, component) => {
           await hydrateAsync(this, this.ctx);
         })();
 
-        // even though root is also accessible from ctx.host, it might be too verbose
-        // if we want to do any query selector on init. It takes literally one word
-        // and it makes query selector much easier in the component.
-        this.ctx.onInit(root);
-
         let observerConfig = {
           childList: true,
           subtree: true,
@@ -64,6 +62,10 @@ export let define = (options, component) => {
             observer.observe(this.shadowRoot, observerConfig);
 
           observer.observe(this, observerConfig);
+
+          // Calling onInit after the observer has been created. In case we create new elements on init
+          // for them to be hydrated.
+          this.ctx.onInit(root);
         });
       }
       attributeChangedCallback(n, ov, nv) {
