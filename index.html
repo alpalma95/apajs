@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" hidden>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,18 +8,36 @@
   </head>
   <body>
     <div class="container mx-auto px-2 py-5">
-      <custom-1 step="3" test='{"hello":"world"}'>
-        <p>Count from slot: <span ref="count">0</span></p>
-        <button
-          class="rounded bg-blue-200 px-4 py-2 my-2 font-semibold"
-          data-id="test"
-          :click="inc | 2"
-        >
-          From slot + 2
-        </button>
-      </custom-1>
-      <custom-3 initial_count="3"></custom-3>
-      <custom-3 initial_count="0"></custom-3>
+      <h1 class="font-bold text-3xl mb-5">List of all examples:</h1>
+      <ul class="pl-2">
+        <li class="mb-5">
+          <a
+            class="text-blue-700 hover:(underline text-blue-900)"
+            href="/examples/counter/counter.html"
+            >Counter:</a
+          >
+          Showcasing how we can use the shadow DOM to create HTML custom
+          components together with javascript rendered content.
+        </li>
+        <li class="mb-5">
+          <a
+            class="text-blue-700 hover:(underline text-blue-900)"
+            href="/examples/attributes_change/attributes.html"
+            >Attributes change:</a
+          >
+          Showcasing how we can use the attributes change callback to react to
+          changing attributes.
+        </li>
+        <li class="mb-5">
+          <a
+            class="text-blue-700 hover:(underline text-blue-900)"
+            href="/examples/list/list.html"
+            >List:</a
+          >
+          Showcasing how we can create and delete hydratable elements on
+          runtime.
+        </li>
+      </ul>
     </div>
   </body>
 </html>
