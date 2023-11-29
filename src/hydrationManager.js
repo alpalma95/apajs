@@ -73,7 +73,7 @@ let processNode = (node, ctx) => {
 let findClosestCustomElement = node => {
   let parent = node.parentElement;
   while ((parent = parent.parentElement)) {
-    if (parent.tagName.includes("-")) break;
+    if (parent.tagName.includes("-") || parent.hasAttribute("is")) break;
   }
   return parent;
 };
