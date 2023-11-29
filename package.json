@@ -1,7 +1,7 @@
 {
   "name": "apajs",
-  "version": "0.2.0",
-  "description": "2.5kb library wrapping the Web Components API with reactivity out of the box.",
+  "version": "1.0.0",
+  "description": "2kb library wrapping the Web Components API with reactivity out of the box.",
   "main": "./src/index.js",
   "files": [
     "dist",
