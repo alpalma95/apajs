@@ -1,7 +1,11 @@
 import { define, html } from "../../src";
 
 define(
-  { tag: "back-btn", onConstruct: host => host.setAttribute("href", "/") },
+  {
+    tag: "back-btn",
+    onConstruct: host => host.setAttribute("href", "/"),
+    isStatic: true,
+  },
   function (_) {
     return html`
       <span

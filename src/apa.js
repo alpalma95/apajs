@@ -1,9 +1,10 @@
+// @ts-nocheck
 /// <reference types="./main.d.ts" />
 
 import { hydrateAsync, observeChildren } from "./hydrationManager";
 
 /**
- * *@type {import("./main").DefineComponent}
+ * @type {import("./main").Define}
  */
 export let define = (
   options,
@@ -24,6 +25,7 @@ export let define = (
             $refs: {},
             handlers: {},
             watch: (n, ov, nv) => {},
+            props: {},
           };
           if (options.shadow) {
             this.shadow = this.attachShadow({ mode: options.shadow });
@@ -51,9 +53,10 @@ export let define = (
           this.ctx["handlers"] = {};
 
           let root = this.shadowRoot ?? this;
-          root.innerHTML = component(this.ctx);
+          let content = component(this.ctx);
+          if (content) root.innerHTML = content;
 
-          if (!options.isStateless) {
+          if (!options.isStatic) {
             (async () => {
               await hydrateAsync(this, this.ctx);
             })();
@@ -73,6 +76,8 @@ export let define = (
               // for them to be hydrated.
               this.ctx.onInit(root);
             });
+          } else {
+            this.ctx.onInit(root);
           }
         }
         attributeChangedCallback(n, ov, nv) {
