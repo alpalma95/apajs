@@ -1,6 +1,6 @@
 # Streams
 
-Lightweight and minimalistic solution to reactivity. It was originally intended to be used together with [ApăJS](https://github.com/alpalma95/apajs), but you can always use it as a standalone solution.
+Lightweight (**~800b** minified and **~500b** minified + gzipped) and minimalistic solution to reactivity. It was originally intended to be used together with [ApăJS](https://github.com/alpalma95/apajs), but you can always use it as a standalone solution.
 
 ## Usage
 
