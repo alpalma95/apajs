@@ -20,7 +20,7 @@ ApăJS is a minimal library aiming at reducing boilerplate around web components
 
 # Getting started
 
-The easiest way of getting started is via esmsh. You can import the main functions from there:
+The easiest way of getting started is via esm. You can import the main functions from there:
 
 ```javascript
 import { define, html } from "https://esm.sh/apajs@1.0.1";
@@ -30,6 +30,6 @@ define({ tag: "hello-world" }, function () {
 });
 ```
 
-Alterantively, if you want to use npm, `npm i apajs`.
+Alternatively, if you want to use npm, `npm i apajs`.
 
-Documentation is still WIP. If you're super curious and want to test it out, please take a look a the [examples]('./examples') directory. There you can find several examples to have a first feel of how the syntax looks like!
+Documentation is still WIP. If you're super curious and want to test it out, please take a look a the [examples](/examples) directory. There you can find several examples to have a first feel of how the syntax looks like!
