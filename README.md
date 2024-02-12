@@ -20,7 +20,7 @@ ApăJS is a minimal library aiming at reducing boilerplate around web components
 The easiest way of getting started is via esm. You can import the main functions from there:
 
 ```javascript
-import { define, html } from "https://esm.sh/apajs@1.0.1";
+import { define, html } from "https://esm.sh/apajs@1.0.2";
 
 define({ tag: "hello-world" }, function () {
   return html`<h1>Hello world!</h1>`;
