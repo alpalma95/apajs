@@ -8,15 +8,12 @@
 
 # Intro
 
-ApăJS is a minimal library aiming at reducing boilerplate around web components, yet keeping them fairly "vanilla". With its **~3.5kb** (minified, **~1.5kb** gzipped), it provides out-of-the-box:
+ApăJS is a minimal library aiming at reducing boilerplate around web components, yet keeping them fairly "vanilla". With its **~3kb** (minified, **~1kb** gzipped), it provides out-of-the-box:
 
 - A way of creating web components with a functional approach
 - Automatically add event handlers to DOM elements
 - Automatically store references to the DOM to lower the boilerplate around query selectors
 - First-class support for server-side rendered HTML
-- Reactivity engine called `Streams` (heavily inspired by Vue reactivity). You can check the preliminary documentation [here](https://github.com/alpalma95/apajs-streams)
-
-> Notice: Intentionally, the reactivity provided by Streams in ApăJS refers to javascript only. DOM reactivity must be setup manually (that's why we provide the `ref` functionality, to make this setup less boilerplaty).
 
 # Getting started
 
