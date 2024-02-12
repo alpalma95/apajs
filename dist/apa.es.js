@@ -1,28 +1,28 @@
-let m = (e, r) => {
+let d = (e, r) => {
   let [t, s] = e.split("|");
   return [
     t.trim(),
-    s == null ? void 0 : s.split(",").map((i) => {
-      let l = i.trim();
-      if (/^\'|^\"|^\`/.test(l) || l === "$event")
-        return l === "$event" ? l : l.slice(1, -1);
+    s == null ? void 0 : s.split(",").map((a) => {
+      let i = a.trim();
+      if (/^\'|^\"|^\`/.test(i) || i === "$event")
+        return i === "$event" ? i : i.slice(1, -1);
       try {
-        return JSON.parse(l);
+        return JSON.parse(i);
       } catch {
-        return r[l];
+        return r[i];
       }
     })
   ];
-}, p = (e, r, t) => {
-  let [s, i] = m(r.getAttribute(e));
+}, o = (e, r, t) => {
+  let [s, a] = d(r.getAttribute(e));
   if (!s in t.handlers)
     return;
-  let l = t.handlers[s], a = e.slice(1);
-  i ? r.addEventListener(
-    a,
-    (n) => i.at(0) === "$event" ? l(n, ...i.slice(1)) : l(...i)
-  ) : r.addEventListener(a, l);
-}, w = (e, r) => {
+  let i = t.handlers[s], n = e.slice(1);
+  a ? r.addEventListener(
+    n,
+    (l) => a.at(0) === "$event" ? i(l, ...a.slice(1)) : i(...a)
+  ) : r.addEventListener(n, i);
+}, u = (e, r) => {
   let t = e.getAttribute("ref");
   if (t)
     if (t in r.$refs)
@@ -33,52 +33,52 @@ let m = (e, r) => {
         r.$refs[t].add(e);
     else
       r.$refs[t] = e;
-}, E = (e, r) => {
+}, m = (e, r) => {
   let t = e.getAttribute("ref");
   r.$refs[t] instanceof Set ? r.$refs[t].delete(e) : delete r.$refs[t];
 }, h = (e, r) => {
   e.getAttributeNames().filter((t) => t.startsWith(":") || t === "ref").forEach((t) => {
-    t == "ref" && w(e, r), t.startsWith(":") && p(t, e, r);
+    t == "ref" && u(e, r), t.startsWith(":") && o(t, e, r);
   });
-}, b = (e) => {
+}, N = (e) => {
   let r = e.parentElement;
   for (; (r = r.parentElement) && !(r.tagName.includes("-") || r.hasAttribute("is")); )
     ;
   return r;
-}, g = (e) => {
+}, E = (e) => {
   let r = (t) => {
     t.filter(
-      (i) => b(i.target) == e
-    ).forEach((i) => {
-      if (i.type !== "childList")
+      (a) => N(a.target) == e
+    ).forEach((a) => {
+      if (a.type !== "childList")
         return;
-      let { addedNodes: l, removedNodes: a } = i;
-      a.length && a.forEach((n) => {
-        !n.tagName || !n.getAttribute("ref") || E(n, e.ctx);
-      }), l.length && l.forEach(async (n) => {
-        n.tagName && (h(n, e.ctx), n.childNodes.length > 0 && await u(n, e.ctx));
+      let { addedNodes: i, removedNodes: n } = a;
+      n.length && n.forEach((l) => {
+        !l.tagName || !l.getAttribute("ref") || m(l, e.ctx);
+      }), i.length && i.forEach(async (l) => {
+        l.tagName && (h(l, e.ctx), l.childNodes.length > 0 && await c(l, e.ctx));
       });
     });
   };
   return new Promise((t) => {
     t(new MutationObserver(r));
   });
-}, d = (e, r) => {
+}, f = (e, r) => {
   if (!e)
     return;
   const t = document.createTreeWalker(e, NodeFilter.SHOW_ELEMENT, {
     /** @param {HTMLElement} node */
-    acceptNode(i) {
-      return i.getAttributeNames().some((l) => l.startsWith(":") || l === "ref") ? NodeFilter.FILTER_ACCEPT : i.tagName.includes("-") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP;
+    acceptNode(a) {
+      return a.getAttributeNames().some((i) => i.startsWith(":") || i === "ref") ? NodeFilter.FILTER_ACCEPT : a.tagName.includes("-") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP;
     }
   });
   let s = t.currentNode;
   for (; s = t.nextNode(); )
     h(s, r);
-  e.shadowRoot !== null && d(e.shadowRoot, r);
-}, u = (e, r) => new Promise((t) => {
-  d(e, r), t();
-}), C = (e, r, t = { className: HTMLElement, tag: "" }) => {
+  e.shadowRoot !== null && f(e.shadowRoot, r);
+}, c = (e, r) => new Promise((t) => {
+  f(e, r), t();
+}), b = (e, r, t = { className: HTMLElement, tag: "" }) => {
   window.customElements.get(e.tag) || window.customElements.define(
     e.tag,
     class extends t.className {
@@ -91,7 +91,7 @@ let m = (e, r) => {
           host: this,
           $refs: {},
           handlers: {},
-          watch: (s, i, l) => {
+          watch: (s, a, i) => {
           },
           props: {}
         }, e.shadow && (this.shadow = this.attachShadow({ mode: e.shadow })), typeof e.onConstruct == "function" && e.onConstruct(this);
@@ -101,30 +101,30 @@ let m = (e, r) => {
       }
       connectedCallback() {
         let s = {};
-        this.getAttributeNames().forEach((a) => {
-          let n = this.getAttribute(a);
+        this.getAttributeNames().forEach((n) => {
+          let l = this.getAttribute(n);
           try {
-            s[a] = JSON.parse(n);
+            s[n] = JSON.parse(l);
           } catch {
-            s[a] = n;
+            s[n] = l;
           }
         }), this.ctx.props = s, this.ctx.handlers = {};
-        let i = this.shadowRoot ?? this, l = r(this.ctx);
-        if (l && (i.innerHTML = l), e.isStatic)
-          this.ctx.onInit(i);
+        let a = this.shadowRoot ?? this, i = r(this.ctx);
+        if (i && (a.innerHTML = i), e.isStatic)
+          this.ctx.onInit(a);
         else {
-          (async () => await u(this, this.ctx))();
-          let a = {
+          (async () => await c(this, this.ctx))();
+          let n = {
             childList: !0,
             subtree: !0
           };
-          g(this).then((n) => {
-            this.shadowRoot && n.observe(this.shadowRoot, a), n.observe(this, a), this.ctx.onInit(i);
+          E(this).then((l) => {
+            this.shadowRoot && l.observe(this.shadowRoot, n), l.observe(this, n), this.ctx.onInit(a);
           });
         }
       }
-      attributeChangedCallback(s, i, l) {
-        this.ctx.watch(s, i, l);
+      attributeChangedCallback(s, a, i) {
+        this.ctx.watch(s, a, i);
       }
       disconnectedCallback() {
         this.ctx.onDestroy();
@@ -132,61 +132,14 @@ let m = (e, r) => {
     },
     (() => t.className !== HTMLElement ? { extends: t == null ? void 0 : t.tag } : {})()
   );
-}, { isArray: N } = Array, v = (e, ...r) => {
-  let t = r.map((s) => s instanceof HTMLElement ? s.outerHTML : N(s) ? s.join(" ") : s);
+}, { isArray: w } = Array, A = (e, ...r) => {
+  let t = r.map((s) => s instanceof HTMLElement ? s.outerHTML : w(s) ? s.join(" ") : s);
   return e.reduce(
-    (s, i, l) => s + i + (t[l] ?? ""),
+    (s, a, i) => s + a + (t[i] ?? ""),
     ""
   );
-}, f = null, c = /* @__PURE__ */ new WeakMap();
-class y {
-  constructor(r) {
-    this.cb = r, this._set = /* @__PURE__ */ new Set();
-  }
-  unhook() {
-    this._set.forEach((r) => r.delete(this));
-  }
-}
-let A = (e) => {
-  f = new y(e), f.cb();
-  let r = f;
-  return f = null, r;
-}, R = (e, r) => {
-  if (f === null)
-    return;
-  let t;
-  c.has(e) ? t = c.get(e).get(r) : c.set(e, /* @__PURE__ */ new Map([[r, t = /* @__PURE__ */ new Set()]])), f._set.add(t), t.add(f);
-}, L = (e, r) => {
-  if (!c.get(e))
-    return;
-  c.get(e).get(r).forEach(({ cb: s }) => s());
-}, T = (e) => {
-  if (Array.isArray(e) || typeof e != "function" && typeof e != "object")
-    return { val: e };
-  if (typeof e == "function") {
-    let r = o(1);
-    return A(() => r.val = e()), r;
-  } else
-    return Object.fromEntries(
-      Object.entries(e).map(([r, t]) => [
-        r,
-        typeof t == "object" || typeof t == "function" ? o(t) : t
-      ])
-    );
-}, o = (e) => {
-  let r = T(e);
-  return new Proxy(r, {
-    get(t, s, i) {
-      return R(t, s), Reflect.get(t, s, i);
-    },
-    set(t, s, i, l) {
-      return t[s] !== i && (Reflect.set(t, s, i, l), L(t, s)), !0;
-    }
-  });
 };
 export {
-  C as define,
-  A as hook,
-  v as html,
-  o as stream
+  b as define,
+  A as html
 };

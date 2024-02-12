@@ -1,6 +1,6 @@
 import { define } from "../../src";
 import { html } from "../../src";
-import { stream, hook } from "../../src";
+import { stream, hook } from "https://esm.sh/apajs-streams@1.0.1";
 import { sheet, tw } from "../shared/twind";
 import "../shared/backBtnComponent";
 
